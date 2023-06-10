@@ -72,6 +72,12 @@ class ManageParticipantController extends Controller
     {
         $user = User::find($id);
 
+        //get participant's group name if exist
+        if(isset($user->participants->participant_groupID)){
+            $group = Group::find($user->participants->participant_groupID);
+            $user->setAttribute('group', $group);
+        }
+
         $isVerifiedMember = session('isVerifiedMember');
         return view('member.viewparticipantdetail', compact('isVerifiedMember', 'user'));
     }

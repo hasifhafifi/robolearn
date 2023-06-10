@@ -61,7 +61,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phonenum }}</td>
                     @if (!isset($user->group))
-                      <td><a href="{{ route('group') }}">Not set yet</a></td>
+                      <td><a href="{{ route('grouplist') }}">Not set yet</a></td>
                     @else
                       <td><a href="{{ route('viewgroupdetail', ['id' => $user->group->id]) }}">{{ $user->group->name }}</a></td>
                     @endif
@@ -117,7 +117,7 @@
                         var urlGroup = "{{ route('viewgroupdetail', ['id' => ':group_id']) }}".replace(':group_id', groupID);
                       }else{
                         var group = "Not set yet"
-                        var urlGroup = "{{ route('group') }}";
+                        var urlGroup = "{{ route('grouplist') }}";
                       }
 
                         var row = '<tr>' +

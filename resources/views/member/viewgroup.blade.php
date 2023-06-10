@@ -94,11 +94,11 @@
                         @endif
                     </select>
                   </div>
-                  <div class="form-group mb-3" id="dynamic_field"></div>
+                  {{-- <div class="form-group mb-3" id="dynamic_field"></div>
                   <div class="form-group mb-3">
                     <button type="button" class="btn btn-primary" name="add" id="add"><i class="bi bi-plus"></i> </button>
                     <button type="button" class="btn btn-danger" name="remove" id="remove"><i class="bi bi-dash"></i> </button>
-                  </div>
+                  </div> --}}
               </div>
               <input type="hidden" id="groupID" name="groupID" value="{{ $group->id }}">
               <div class="modal-footer">

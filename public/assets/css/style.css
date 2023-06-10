@@ -360,14 +360,13 @@ h6 {
 
 @media (min-width: 1200px) {
   .logo {
-    width: 280px;
+    width: 180px;
   }
 }
 
 .logo img {
   max-height: 220px;
   margin-right: 6px;
-  margin-top: 8px;
   overflow: hidden;
 }
 

@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="col-lg-3 col-md-4 label">Group</div>
                     @if (isset($user->participants->participant_groupID))
-                        <div class="col-lg-9 col-md-8">{{ $user->participants->participant_groupID }}</div>
+                        <div class="col-lg-9 col-md-8">{{ $user->group->name }}</div>
                     @else
                         <div class="col-lg-9 col-md-8">Not Set Yet</div>
                     @endif

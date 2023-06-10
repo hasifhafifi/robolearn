@@ -166,7 +166,8 @@
                       </div>
                     </div>
 
-                  </div><!-- End Customers Card -->
+                  </div>
+                  <!-- End Customers Card -->
                 </div>
               </div>
               

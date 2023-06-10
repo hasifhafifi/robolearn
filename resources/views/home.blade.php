@@ -64,7 +64,6 @@
                       <div class="card-body">
                         <h5 class="card-title">Detail</h5>
                         <p class="card-text">Your account is still not verified by the Admin.</p>
-                        <a href="#" class="btn btn-primary">Button</a>
                       </div>
                     </div>
                   </div>
@@ -72,55 +71,47 @@
                   <div class="col-lg-6 mb-4">
                     <div class="card" style="width: 40rem;">
                       <div class="card-body">
-                        <h5 class="card-title">Detail</h5>
-                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                        <a href="#" class="btn btn-primary">Button</a>
+                        <h5 class="card-title">User Detail</h5>
+                        <p class="card-text"><strong>Username : </strong>{{$user->username}}</p>
+                        <p class="card-text"><strong>Email : </strong>{{$user->email}}</p>
+                        <p class="card-text"><strong>Address : </strong>{{$user->address}}</p>
+                        <p class="card-text"><strong>Phone Number : </strong>{{$user->phonenum}}</p>
+                        <a href="{{route('profile')}}" class="btn btn-primary">Edit Profile</a>
                       </div>
                     </div>
                   </div>
                 @endif
                 </div>
-
+                
+                @if(Auth::user()->usertype == '1')
                 <!-- cards -->
                 <h5 class="card-title">Learning Progress</h5>
                 <div class="row">
                   <!-- Sales Card -->
+                  @foreach($modules as $module)
                   <div class="col-xxl-4 col-md-6">
                     <div class="card info-card sales-card">
 
-                      <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                          <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                          </li>
-
-                          <li><a class="dropdown-item" href="#">Today</a></li>
-                          <li><a class="dropdown-item" href="#">This Month</a></li>
-                          <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                      </div>
-
                       <div class="card-body">
-                        <h5 class="card-title">Sales <span>| Today</span></h5>
+                        <h5 class="card-title">{{ $module->moduleName }}</h5>
 
                         <div class="d-flex align-items-center">
                           <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                            <i class="bi bi-cart"></i>
+                            <a href="{{ route('viewmoduleparticipant', ['id' => $module->id]) }}"><i class="bi bi-folder"></i></a>
                           </div>
                           <div class="ps-3">
-                            <h6>145</h6>
-                            <span class="text-success small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">increase</span>
-
+                            <h6>{{ $module->percentage }}%</h6>
                           </div>
                         </div>
                       </div>
 
                     </div>
-                  </div><!-- End Sales Card -->
+                  </div>
+                  @endforeach
+                  <!-- End Sales Card -->
 
                   <!-- Revenue Card -->
-                  <div class="col-xxl-4 col-md-6">
+                  {{-- <div class="col-xxl-4 col-md-6">
                     <div class="card info-card revenue-card">
 
                       <div class="filter">
@@ -189,8 +180,9 @@
                       </div>
                     </div>
 
-                  </div><!-- End Customers Card -->
+                  </div><!-- End Customers Card --> --}}
                 </div>
+                @endif
               </div>
               
             </div>
