@@ -97,6 +97,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     Route::post('/submission/viewsubmission/edit/submit', [App\Http\Controllers\ModuleController::class, 'editSubmittedFile'])->name('editSubmittedFile');
     Route::post('/submission/viewsubmission/delete', [App\Http\Controllers\ModuleController::class, 'removeSubmission'])->name('removeSubmission');
     Route::get('/submission/viewsubmission/get/{id}', [App\Http\Controllers\ModuleController::class, 'getSubmission'])->name('getSubmission');
+
+    //report
+    Route::get('/report', [App\Http\Controllers\ReportController::class, 'viewReportParticipant'])->name('viewReportParticipant');
 });
 
 //check if user is member/admin and authenticated
@@ -145,6 +148,26 @@ Route::group(['middleware' => ['auth', 'member']], function () {
     Route::post('/submission/editsubmissiondetail', [App\Http\Controllers\ModuleController::class, 'editSubmissionDetail'])->name('editSubmissionDetail');
     Route::post('/submission/deletesubmissiondetail', [App\Http\Controllers\ModuleController::class, 'deleteSubmissionDetail'])->name('deleteSubmissionDetail');
     Route::post('/submission/getallsubmission', [App\Http\Controllers\ModuleController::class, 'getAllSubmission'])->name('getAllSubmission');
+
+    //report
+    Route::get('/progress/listofclasses', [App\Http\Controllers\ReportController::class, 'activeclasslist'])->name('activeclassprogressreport');
+    Route::get('/progress/{id}', [App\Http\Controllers\ReportController::class, 'viewProgressbyClass'])->name('viewProgressbyClass');
+    Route::get('/progress/participant/{id}', [App\Http\Controllers\ReportController::class, 'viewParticipantModule'])->name('viewParticipantModule');
+    
+    //tournament reporting
+    Route::get('/tournament/listofclasses', [App\Http\Controllers\ReportController::class, 'activeclasstournamentlist'])->name('activeclasstournamentreport');
+    Route::get('/tournament/{id}', [App\Http\Controllers\ReportController::class, 'viewTournamentbyClass'])->name('viewTournamentbyClass');
+    Route::get('/tournament/participant/{id}', [App\Http\Controllers\ReportController::class, 'viewTournamentbyClassParticipant'])->name('viewTournamentbyClassParticipant');
+    Route::get('/tournament/group/{id}', [App\Http\Controllers\ReportController::class, 'viewTournamentbyClassGroup'])->name('viewTournamentbyClassGroup');
+    Route::get('/tournament/participant/create-report/{id}', [App\Http\Controllers\ReportController::class, 'reportForm'])->name('reportForm');
+    Route::post('/tournament/participant/create-report/save', [App\Http\Controllers\ReportController::class, 'createReport'])->name('createReport');
+    Route::get('/tournament/participant/view-report/{id}', [App\Http\Controllers\ReportController::class, 'viewReport'])->name('viewReport');
+    Route::get('/tournament/participant/view-report/edit/{id}', [App\Http\Controllers\ReportController::class, 'editReport'])->name('editReport');
+    Route::post('/tournament/participant/view-report/edit/save', [App\Http\Controllers\ReportController::class, 'updateReport'])->name('updateReport');
+    Route::get('/tournament/group/create-report/{id}', [App\Http\Controllers\ReportController::class, 'reportFormGroup'])->name('reportFormGroup');
+    Route::get('/tournament/group/view-report/{id}', [App\Http\Controllers\ReportController::class, 'viewReportGroup'])->name('viewReportGroup');
+    Route::get('/tournament/group/view-report/edit/{id}', [App\Http\Controllers\ReportController::class, 'editReportGroup'])->name('editReportGroup');
+    Route::post('/tournament/participant/view-report/delete', [App\Http\Controllers\ReportController::class, 'deleteReport'])->name('deleteReport');
 });
 
 //check if user is admin and authenticated (admin only)
@@ -153,5 +176,9 @@ Route::group(['middleware' => ['auth', 'admin']], function () {
     Route::post('/home/viewmembers/verify/{id}', [App\Http\Controllers\AdminVerificationController::class, 'verifyMember'])->name('verifymember');
     Route::get('/home/viewmembers/detail/{id}', [App\Http\Controllers\AdminVerificationController::class, 'getUserDetails'])->name('viewmemberdetail');
     Route::post('/home/viewmembers/remove/{id}', [App\Http\Controllers\AdminVerificationController::class, 'removeUser'])->name('removemember');
+
+    //report template
+    Route::get('/home/createtemplate', [App\Http\Controllers\ReportController::class, 'createReportTemplate'])->name('adminCreateTemplate');
+    Route::post('/home/createtemplate/save', [App\Http\Controllers\ReportController::class, 'saveReportTemplate'])->name('saveReportTemplate');
 });
 

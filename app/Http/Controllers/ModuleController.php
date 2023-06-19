@@ -85,7 +85,7 @@ class ModuleController extends Controller
         //     }
         // }
 
-        $arr = $this->checkIfModuleCompletionExist();
+        $arr = $this->checkIfModuleCompletionExist($participant);
         
         // $arr = json_decode($participant->moduleCompletion, true);
         foreach($arr as $a){
@@ -139,9 +139,8 @@ class ModuleController extends Controller
 
         $documentIDs = $documents->pluck('id');
         $files = File::whereIn('documentID', $documentIDs)->get();
-        $submissions = Submission::whereIn('documentID', $documentIDs)->get();
 
-        return view('module.viewmodule', compact('module', 'sections', 'documents', 'files', 'submissions'));
+        return view('module.viewmodule', compact('module', 'sections', 'documents', 'files'));
     }
 
     public function viewModuleParticipant($id)
@@ -170,7 +169,7 @@ class ModuleController extends Controller
         // $allFiles = File::whereIn('documentID', $allDocumentIDs)->get();
 
         // $arrayFile = [];
-        $arr = $this->checkIfFileCompletionExist();
+        $arr = $this->checkIfFileCompletionExist($participant);
         //update fileCompletion column
         // if(!isset($participant->fileCompletion)){
         //     foreach($allFiles as $file){

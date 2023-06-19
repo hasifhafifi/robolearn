@@ -107,7 +107,7 @@
 
     @if(Auth::user()->usertype == '1')
     <li class="nav-item">
-      <a class="nav-link collapsed" href="pages-contact.html">
+      <a class="nav-link collapsed" href="{{ route('viewReportParticipant') }}">
         <i class="bi bi-card-checklist"></i>
         <span>Report</span>
       </a>
@@ -119,15 +119,22 @@
       </a>
       <ul id="report-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="{{ route('forum.index') }}">
+          <a href="{{ route('activeclassprogressreport') }}">
             <i class="bi bi-circle"></i><span>Participant Progress</span>
           </a>
         </li>
         <li>
-          <a href="{{ route('forum.category.manage') }}">
+          <a href="{{ route('activeclasstournamentreport') }}">
             <i class="bi bi-circle"></i><span>Tournament</span>
           </a>
         </li>
+        @if(Auth::user()->usertype == '3')
+        <li>
+          <a href="{{ route('adminCreateTemplate') }}">
+            <i class="bi bi-circle"></i><span>Report Template</span>
+          </a>
+        </li>
+        @endif
       </ul>
     </li>
     @endif

@@ -49,8 +49,7 @@
             <div class="d-flex align-items-center justify-content-between">
             <i class="bi bi-list toggle-sidebar-btn"></i>
             <a href="{{ route('home') }}" class="logo d-flex align-items-center">
-                <img src="{{ asset('assets/img/robolearn-crop.png') }}" alt="" class="img-fluid">
-                {{-- <span class="d-none d-lg-block">NiceAdmin</span> --}}
+                    <img src="{{ asset('assets/img/robolearn-crop.png') }}" alt="" class="img-fluid">
             </a>
             </div><!-- End Logo --> 
 

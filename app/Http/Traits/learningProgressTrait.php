@@ -12,9 +12,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 trait learningProgressTrait{
-    public function checkIfFileCompletionExist(){
-        $user = Auth::user();
-        $participant = Participant::where('user_id', $user->id)->first();
+    public function checkIfFileCompletionExist($participant){
+        // $user = Auth::user();
+        // $participant = Participant::where('user_id', $user->id)->first();
         $class = Classroom::where('classCode', $participant->participant_classcode)->first();
         $allModules = Module::where('classroomID', $class->id)->get();
         $allModulesIDs = $allModules->pluck('id');
@@ -70,14 +70,14 @@ trait learningProgressTrait{
         return json_decode($participant->fileCompletion, true);
     }
 
-    public function checkIfModuleCompletionExist(){
+    public function checkIfModuleCompletionExist($participant){
         //get list of active classrooms
-        $classroom = Classroom::where('classCode', Auth::user()->participants->participant_classcode)->first();
+        $classroom = Classroom::where('classCode', $participant->participant_classcode)->first();
         
         $modules = Module::where('classroomID', $classroom->id)->where('isHidden', false)->get();
 
-        $user = Auth::user();
-        $participant = Participant::where('user_id', $user->id)->first();
+        // $user = Auth::user();
+        // $participant = Participant::where('user_id', $user->id)->first();
 
         $arrayModule = [];
 

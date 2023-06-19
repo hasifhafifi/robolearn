@@ -37,7 +37,7 @@ class HomeController extends Controller
             $modules = Module::where('classroomID', $class->id)->take(3)->get();
 
             //get module completion for that user
-            $moduleCompletion = $this->checkIfModuleCompletionExist();
+            $moduleCompletion = $this->checkIfModuleCompletionExist($user->participants);
             
             foreach ($moduleCompletion as $arr) {
                 foreach ($modules as $module) {

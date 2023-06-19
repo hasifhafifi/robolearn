@@ -18,18 +18,20 @@
 
         <div class="card">
           <div class="card-body">
-             <h5 class="card-title">Group</h5>
-             <div class="position-absolute top-0 end-0 p-3">
-                <div class="row">
-                    <div class="row justify-content-around">
-                    <div class="col-6">
+            <div class="row">
+              <div class="d-flex justify-content-between">
+                <div class="">
+                  <h5 class="card-title">Group</h5>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
                         @if(!($classrooms->isEmpty()))
                         <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creategroup">
                             <i class="bi bi-plus-circle"></i><span>&nbspGroup</span>
                          </button>
                          @endif
                     </div>
-                    <div class="col-6">
+                    <div>
                         <form action="">
                         <select name="classDropdown" id="classDropdown" class="form-select">
                             @if($classrooms->isEmpty())
@@ -42,9 +44,8 @@
                         </select>
                     </form>
                     </div>
-                    </div>
-                      
-                </div>
+                  </div>
+              </div>
             </div>
             
              
