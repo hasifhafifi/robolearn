@@ -19,19 +19,58 @@
               <div class="card-body pt-3">
                 <!-- Bordered Tabs -->
                 <ul class="nav nav-tabs nav-tabs-bordered">
-    
+                    
                   <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#group">Group</button>
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ranking">Ranking</button>
+                  </li>
+
+                  <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#group">Group Report</button>
                   </li>
     
                   <li class="nav-item">
-                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#individual">Individual</button>
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#individual">Individual Report</button>
                   </li>
     
                 </ul>
                 <div class="tab-content pt-2">
-    
-                  <div class="tab-pane fade show active group" id="group">
+                    
+                    <div class="tab-pane fade show active ranking" id="ranking">
+                        <table class="table table-striped table-bordered table-hover table-responsive">
+                            <thead>
+                                <th>No</th>
+                                <th>Group/User Name</th>
+                                <th>Total Marks</th>
+                                <th>Total Checkpoints Passed</th>
+                                <th>Objective</th>
+                            </thead>
+                            <tbody>
+                                @if(!$reports->isEmpty())
+                                @foreach($reports as $index=>$report)
+                                <tr>
+                                    <td>{{ $index+1 }}</td>
+                                    @if(isset($report->user))
+                                    <td>{{ $report->user->username }}</td>
+                                    @else
+                                    <td>{{ $report->group->name }}</td>
+                                    @endif
+                                    <td>{{ $report->totalMarks }}</td>
+                                    <td>{{ $report->totalCheckpoints }}</td>
+                                    @if($report->passObjective == true)
+                                    <td>Passed</td>
+                                    @else
+                                    <td>Failed</td>
+                                    @endif
+                                </tr>
+                                @endforeach
+                                @else
+                                <tr><td colspan="5" class="text-center">No Data</td></tr>
+                                @endif
+                            </tbody>
+                         </table>
+                    </div>
+
+                  <div class="tab-pane fade show group" id="group">
                     <table class="table table-striped table-bordered table-hover table-responsive">
                         @if(isset($reportGroup))
                         <tr>

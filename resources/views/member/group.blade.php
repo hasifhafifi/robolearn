@@ -26,7 +26,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         @if(!($classrooms->isEmpty()))
-                        <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#creategroup">
+                        <button  type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#creategroup">
                             <i class="bi bi-plus-circle"></i><span>&nbspGroup</span>
                          </button>
                          @endif

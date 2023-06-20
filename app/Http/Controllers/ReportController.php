@@ -85,25 +85,49 @@ class ReportController extends Controller
         return view('report.activeclasstournamentreport', compact('classrooms'));
     }
 
+    // public function viewTournamentbyClass($id)
+    // {
+    //     //get list of active classrooms
+    //     $class = Classroom::where('id', $id)->first();
+    //     $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
+    //     $participants = Participant::where('participant_classcode', $class->classCode)->get();
+    //     $groups = Group::where('classroom_id', $class->id)->get();
+
+    //     foreach($participants as $participant){
+    //         if(isset($participant->participant_groupID)){
+    //             $group = Group::where('id', $participant->participant_groupID)->first();
+    //             $participant->setAttribute('groupName', $group->name);
+    //         }else{
+    //             $participant->setAttribute('groupName', 'Not in a group');
+    //         }
+    //     }
+
+    //     // dd($reports);
+        
+    //     return view('report.learningprogress', compact('modules', 'participants', 'class'));
+    // }
+
     public function viewTournamentbyClass($id)
     {
         //get list of active classrooms
         $class = Classroom::where('id', $id)->first();
-        $participants = Participant::where('participant_classcode', $class->classCode)->get();
-        $groups = Group::where('classroom_id', $class->id)->get();
+        $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
 
-        foreach($participants as $participant){
-            if(isset($participant->participant_groupID)){
-                $group = Group::where('id', $participant->participant_groupID)->first();
-                $participant->setAttribute('groupName', $group->name);
+        foreach($reports as $report){
+            if(isset($report->userID)){
+                $user = User::where('id', $report->userID)->first();
+                $report->setAttribute('user', $user);
             }else{
-                $participant->setAttribute('groupName', 'Not in a group');
+                $group = Group::where('id', $report->groupID)->first();
+                $participants = Participant::where('participant_groupID', $group->id)->get();
+                $participantIDs = $participants->pluck('user_id');
+                $users = User::whereIn('id', $participantIDs)->get();
+                $group->setAttribute('groupMembers', $users);
+                $report->setAttribute('group', $group);
             }
         }
 
-        dd($participants);
-        
-        return view('report.learningprogress', compact('modules', 'participants', 'class'));
+        return view('report.viewranking', compact('reports', 'class'));
     }
 
     public function viewTournamentbyClassParticipant($id)
@@ -330,12 +354,29 @@ class ReportController extends Controller
             $group->setAttribute('groupMembers', $users);
         }
 
+        //ranking
+        $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
+
+        foreach($reports as $report){
+            if(isset($report->userID)){
+                $userDetail = User::where('id', $report->userID)->first();
+                $report->setAttribute('user', $userDetail);
+            }else{
+                $group = Group::where('id', $report->groupID)->first();
+                $participants = Participant::where('participant_groupID', $group->id)->get();
+                $participantIDs = $participants->pluck('user_id');
+                $users = User::whereIn('id', $participantIDs)->get();
+                $group->setAttribute('groupMembers', $users);
+                $report->setAttribute('group', $group);
+            }
+        }
+ 
         //get report for individual
         $reportUser = Report::where('userID', $user->id)->first();
         if(isset($group)){
-            return view('report.viewreportparticipant', compact('user', 'group', 'reportGroup', 'reportUser', 'class'));
+            return view('report.viewreportparticipant', compact('user', 'group', 'reportGroup', 'reportUser', 'reports', 'class'));
         }else{
-            return view('report.viewreportparticipant', compact('user', 'group', 'reportUser', 'class'));
+            return view('report.viewreportparticipant', compact('user', 'group', 'reportUser', 'reports', 'class'));
         }
     }
 

@@ -51,6 +51,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function() {
     //livestream
     Route::get('/livestreambyclass', [App\Http\Controllers\LivestreamController::class, 'indexParticipant'])->name('livestreambyclass');
     Route::get('/livestream/view/{id}', [App\Http\Controllers\LivestreamController::class, 'viewLivestream'])->name('viewlivestream');
+    Route::get('/livestream/fetch-reports', [App\Http\Controllers\LivestreamController::class, 'fetchReports'])->name('fetchReports');
 
     //module
     Route::get('/module', [App\Http\Controllers\ModuleController::class, 'index'])->name('module');

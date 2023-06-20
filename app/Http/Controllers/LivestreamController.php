@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
+use App\Models\Group;
 use App\Models\Livestream;
 use App\Models\Module;
 use App\Models\Participant;
+use App\Models\Report;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -51,7 +54,46 @@ class LivestreamController extends Controller
         //get livestream based on id
         $livestream = Livestream::where('id', $id)->first();
 
-        return view('viewlivestream', compact('livestream'));
+        //ranking
+        $reports = Report::where('classID', $livestream->classroomID)->orderBy('totalMarks', 'desc')->get();
+
+        foreach($reports as $report){
+            if(isset($report->userID)){
+                $userDetail = User::where('id', $report->userID)->first();
+                $report->setAttribute('user', $userDetail);
+            }else{
+                $group = Group::where('id', $report->groupID)->first();
+                $participants = Participant::where('participant_groupID', $group->id)->get();
+                $participantIDs = $participants->pluck('user_id');
+                $users = User::whereIn('id', $participantIDs)->get();
+                $group->setAttribute('groupMembers', $users);
+                $report->setAttribute('group', $group);
+            }
+        }
+
+        return view('viewlivestream', compact('livestream', 'reports'));
+    }
+
+    public function fetchReports(Request $request)
+    {
+        //ranking
+        $reports = Report::where('classID', $request->input('classroomId'))->orderBy('totalMarks', 'desc')->get();
+
+        foreach($reports as $report){
+            if(isset($report->userID)){
+                $userDetail = User::where('id', $report->userID)->first();
+                $report->setAttribute('user', $userDetail);
+            }else{
+                $group = Group::where('id', $report->groupID)->first();
+                $participants = Participant::where('participant_groupID', $group->id)->get();
+                $participantIDs = $participants->pluck('user_id');
+                $users = User::whereIn('id', $participantIDs)->get();
+                $group->setAttribute('groupMembers', $users);
+                $report->setAttribute('group', $group);
+            }
+        }
+
+        return view('livestreampartialtable', compact('reports'));
     }
 
     public function addLivestream()
