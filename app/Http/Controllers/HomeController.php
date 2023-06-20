@@ -34,7 +34,7 @@ class HomeController extends Controller
         $user = Auth::user();
         if(Auth::user()->usertype == '1'){
             $class = Classroom::where('classCode', $user->participants->participant_classcode)->first();
-            $modules = Module::where('classroomID', $class->id)->take(3)->get();
+            $modules = Module::where('classroomID', $class->id)->where('isHidden', '0')->take(3)->get();
 
             //get module completion for that user
             $moduleCompletion = $this->checkIfModuleCompletionExist($user->participants);

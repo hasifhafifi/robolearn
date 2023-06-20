@@ -106,7 +106,7 @@
                 <form method="POST" action="{{ route('register') }}">
                   @csrf
                     <div class="form-outline mb-4">
-                        <label class="col-sm-4 col-form-label">Sign In as</label>
+                        <label class="col-sm-4 col-form-label">Sign Up As:</label>
                         <div class="col-sm-12">
                             <select class="form-select" name="usertype" id="usertype" aria-label="Default select example" onchange="showHide()">
                             <option selected value=1>Participant</option>
@@ -118,7 +118,7 @@
                   <!-- Username input -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" required/>
+                    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{old('username')}}" required/>
                     @error('username')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -131,7 +131,7 @@
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
                         <label class="form-label" for="firstname">First name</label>
-                        <input type="text" id="firstname" name="firstname" class="form-control @error('firstname') is-invalid @enderror" required/>
+                        <input type="text" id="firstname" name="firstname" value="{{old('firstname')}}" class="form-control @error('firstname') is-invalid @enderror" required/>
                         @error('firstname')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -142,7 +142,7 @@
                     <div class="col-md-6 mb-4">
                       <div class="form-outline">
                         <label class="form-label" for="lastname">Last name</label>
-                        <input type="text" id="lastname" name="lastname" class="form-control @error('lastname') is-invalid @enderror" required/>
+                        <input type="text" id="lastname" name="lastname" value="{{old('lastname')}}" class="form-control @error('lastname') is-invalid @enderror" required/>
                         @error('lastname')
                           <span class="invalid-feedback" role="alert">
                               <strong>{{ $message }}</strong>
@@ -155,7 +155,7 @@
                   <!-- Email input -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="email">Email</label>
-                    <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" required/>
+                    <input type="email" id="email" name="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" required/>
                     @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -166,7 +166,7 @@
                   <!-- address input -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="address">Address</label>
-                    <input type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror" required/>
+                    <input type="text" id="address" name="address" value="{{old('address')}}" class="form-control @error('address') is-invalid @enderror" required/>
                     @error('address')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -178,7 +178,7 @@
                   <!-- phone number input -->
                   <div class="form-outline mb-4">
                     <label class="form-label" for="phonenum">Phone Number</label>
-                    <input type="text" id="phonenum" name="phonenum" class="form-control @error('phonenum') is-invalid @enderror" required/>
+                    <input type="text" id="phonenum" name="phonenum" value="{{old('phonenum')}}" class="form-control @error('phonenum') is-invalid @enderror" required/>
                     @error('phonenum')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -200,7 +200,7 @@
                   <!-- class code input for participant -->
                   <div class="form-outline mb-4" id="classcodediv">
                     <label class="form-label" for="classcode">Class Code</label>
-                    <input type="text" id="classcode" name="classcode" class="form-control @error('classcode') is-invalid @enderror" />
+                    <input type="text" id="classcode" name="classcode" value="{{old('classcode')}}" class="form-control @error('classcode') is-invalid @enderror" />
                     @error('classcode')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -211,7 +211,7 @@
                   <!-- <atric number input for member -->
                   <div class="form-outline mb-4" style="display:none;" id="matricnumdiv">
                     <label class="form-label" for="matricnum">Matric Number</label>
-                    <input type="text" id="matricnum" name="matricnum" class="form-control @error('matricnum') is-invalid @enderror" />
+                    <input type="text" id="matricnum" name="matricnum" value="{{old('classcode')}}" class="form-control @error('matricnum') is-invalid @enderror" />
                     @error('matricnum')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

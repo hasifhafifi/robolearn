@@ -15,25 +15,34 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
-             <h5 class="card-title">Participant</h5>
-             <div class="position-absolute top-0 end-0 p-3">
-                      <form action="">
-                        <select name="classDropdown" id="classDropdown" class="form-select">
-                            @if($classrooms->isEmpty())
-                            <option value="">None</option>
-                            @else
-                                @foreach($classrooms as $class)
-                                    <option value="{{ $class->id }}">{{ $class->className }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </form>
-                    </div>
+            <div class="row">
+              <div class="col-lg-6">
+                  <h5 class="card-title">Participant</h5>
+              </div>
+              <div class="col-lg-6">
+                  <form action="">
+                      <div class="row">
+                          <div class="col-md-6">
+                            <!-- Add any additional form elements or buttons here -->
+                          </div>
+                          <div class="col-md-6 mt-2">
+                              <select name="classDropdown" id="classDropdown" class="form-select">
+                                  @if($classrooms->isEmpty())
+                                  <option value="">None</option>
+                                  @else
+                                      @foreach($classrooms as $class)
+                                          <option value="{{ $class->id }}">{{ $class->className }}</option>
+                                      @endforeach
+                                  @endif
+                              </select>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
             
-             
              <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>
@@ -61,7 +70,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phonenum }}</td>
                     @if (!isset($user->group))
-                      <td><a href="{{ route('grouplist') }}">Not set yet</a></td>
+                      <td>Not in a group</td>
                     @else
                       <td><a href="{{ route('viewgroupdetail', ['id' => $user->group->id]) }}">{{ $user->group->name }}</a></td>
                     @endif

@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to add add new module:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <div class="pagetitle">
         <h1>Module</h1>
         <nav>
@@ -19,35 +30,23 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">{{ $classroom->className }}</h5>
-                @if(Auth::user()->usertype != '1')
-                  <div class="position-absolute top-0 end-0 p-3">
-                    <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModuleModal">
-                       <i class="bi bi-plus-circle"></i><span>&nbspAdd Module</span>
-                    </button>
-                  </div>
-                @endif
                 <div class="row">
-                {{-- <div class="col-md-3">
-                    <div class="card shadow">
-                        <a href="{{route('viewmodule')}}">
-                            <img class="card-img-top" src="{{ asset('assets/img/slides-1.jpg') }}" alt="Card image cap">
-                        </a> 
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <h5 class="card-title">Card title</h5>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuAction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    
-                                </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuAction">
-                                    <button class="dropdown-item" type="button">Action</button>
-                                    <button class="dropdown-item" type="button">Another action</button>
-                                    <button class="dropdown-item" type="button">Something else here</button>
-                                    </div>
-                            </div>
-                        </div>
+                  <div class="col-lg-6">
+                    <h5 class="card-title">{{ $classroom->className }}</h5>
+                  </div>
+                  <div class="col-lg-6 mt-3">
+                    <div class="col-md-12 d-flex justify-content-end mb-2">
+                      @if(Auth::user()->usertype != '1')
+                        <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModuleModal">
+                           <i class="bi bi-plus-circle"></i><span>&nbspAdd Module</span>
+                        </button>
+                      @endif
                     </div>
-                </div> --}}
+                  </div>
+                </div>
+                
+
+                <div class="row">
                 @foreach($modules as $module)
                     <div class="col-md-3">
                         @if(Auth::user()->usertype != '1')
@@ -118,10 +117,10 @@
                     <input type="text" class="form-control" id="moduledesc" name="moduledesc" value="{{ old('moduledesc') }}">
                   </div>
   
-                  <div class="form-group mb-3">
+                  {{-- <div class="form-group mb-3">
                     <label for="modulepic">Module Picture:</label>
                     <input id="modulepic" type="file" class="form-control" name="modulepic" value="{{ old('modulepic') }}">
-                  </div>
+                  </div> --}}
 
                   <input name="classSelect" id="classSelect" class="form-select" type="hidden" value="{{$id}}">
               </div>
@@ -161,11 +160,11 @@
                     <input type="text" class="form-control" id="editmoduledesc" name="editmoduledesc" value="{{ old('editmoduledesc') }}">
                   </div>
 
-                  <div class="form-group mb-3">
+                  {{-- <div class="form-group mb-3">
                     <img class="card-img-top" id="moduleImage" name="moduleImage" alt="Card image cap"><br> 
                     <label for="editmodulepic">Module Picture:</label>
                     <input id="editmodulepic" type="file" class="form-control" name="editmodulepic" value="{{ old('editmodulepic') }}">
-                  </div>
+                  </div> --}}
 
                   <input name="editmoduleid" id="editmoduleid" class="form-select" type="hidden">
                   <input name="editclassSelect" id="editclassSelect" class="form-select" type="hidden" value="{{$id}}">

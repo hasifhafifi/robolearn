@@ -1,13 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to add participant to group:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="pagetitle">
     <h1>Manage Participant</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
         <li class="breadcrumb-item">Manage Participant</li>
-        <li class="breadcrumb-item">Group</li>
+        <li class="breadcrumb-item"><a href="{{ route('grouplist') }}">Group</a></li>
         <li class="breadcrumb-item active">Group {{ $group->name }}</li>
       </ol>
     </nav>
@@ -19,12 +30,19 @@
 
         <div class="card">
           <div class="card-body">
-             <h5 class="card-title">Group {{ $group->name }}</h5>
-             <div class="position-absolute top-0 end-0 p-3">
-                <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addmember">
-                   <i class="bi bi-plus-circle"></i><span>&nbspAdd Member</span>
-                </button>
+            <div class="row">
+              <div class="col-lg-6">
+                <h5 class="card-title">Group {{ $group->name }}</h5>
+              </div>
+              <div class="col-lg-6 mt-3">
+                <div class="col-md-12 d-flex justify-content-end">
+                  <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addmember">
+                      <i class="bi bi-plus-circle"></i><span>&nbspAdd Member</span>
+                   </button>
+                </div>
+              </div>
             </div>
+    
              <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>

@@ -147,18 +147,12 @@
 
                     <li class="nav-item dropdown">
 
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <a class="nav-link nav-icon" href="{{ route('chat') }}">
                         <i class="bi bi-chat-left-text"></i>
                         <span class="badge bg-success badge-number">{{ App\Models\ChMessage::where('to_id', auth()->id())->where('seen', 0)->count() }}</span>
                     </a><!-- End Messages Icon -->
 
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                        <li class="dropdown-header">
-                        You have {{ App\Models\ChMessage::where('to_id', auth()->id())->where('seen', 0)->count() }} new messages
-                        <a href="{{ route('chat') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                        </li>
 
-                    </ul><!-- End Messages Dropdown Items -->
 
                     </li><!-- End Messages Nav -->
 

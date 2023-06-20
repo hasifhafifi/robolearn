@@ -185,6 +185,8 @@ class ManageParticipantController extends Controller
         if(Group::where('classroom_id', $classView->id)->first()){
             $groupView = Group::where('classroom_id', $classView->id)->get();
             foreach($groupView as $group){
+                $created_at_formatted = $group->created_at->format('d F Y, H:i A');
+                $group->setAttribute('created_at_formatted', $created_at_formatted);
                 array_push($groups, $group);
             }
         }
@@ -194,6 +196,11 @@ class ManageParticipantController extends Controller
 
     public function createGroup(Request $request)
     {
+        $validatedData = $request->validate([
+            'classname' => 'required',
+            'classSelect' => 'required',
+        ]);
+
         $initArray = [];
         $group = new Group();
         $group->name = $request->input('classname');

@@ -24,14 +24,24 @@
               @csrf
               <div class="form-group mb-3">
                 <label for="editcontentname">Content Title:</label>
-                <input type="text" class="form-control" id="editcontentname" name="editcontentname" value="{{ $document->docTitle }}">
+                <input type="text" class="form-control @error('editcontentname') is-invalid @enderror" id="editcontentname" name="editcontentname" value="{{ $document->docTitle }}">
+                @error('editcontentname')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
               </div>
               <div class="form-group mb-3">
                 <label for="editcontentdetail">Content Description:</label>
-                <textarea name="editcontentdetail" id="editcontentdetail" class="form-control" style="display:none">{{ $document->docDesc }}</textarea>
+                <textarea name="editcontentdetail" id="editcontentdetail" class="form-control @error('editcontentdetail') is-invalid @enderror" style="display:none">{{ $document->docDesc }}</textarea>
                 <div id="editcontentdesc" style="height:250px">
                   {!! $document->docDesc !!}
                 </div>
+                @error('editcontentdetail')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
               </div>
               <div class="form-group mb-3">
                 <label for="isHidden">Visibility:</label><br>

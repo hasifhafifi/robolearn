@@ -285,10 +285,12 @@ trait learningProgressTrait{
             $fileCompletion = json_decode($participant->fileCompletion, true);
             $updatedFileCompletion = [];
 
+            if(isset($fileCompletion)){
             foreach ($fileCompletion as $file) {
                 if ($file['modID'] != $moduleID) {
                     $updatedFileCompletion[] = $file;
                 }
+            }
             }
 
             $participant->fileCompletion = json_encode($updatedFileCompletion);

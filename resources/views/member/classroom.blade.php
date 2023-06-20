@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to create new class:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="pagetitle">
     <h1>Manage Participant</h1>
     <nav>
@@ -40,14 +51,14 @@
                 @foreach ($classrooms as $index => $classroom)
                 <tr>
                   <td>{{$index+1}}</td>
-                  <td><a href="#">{{$classroom->className}}</a></td>
+                  <td>{{$classroom->className}}</td>
                   <td>{{ $classroom->classCode }}</td>
                   @if(empty($classroom->classParticipant))
                     <td>0</td>
                   @else
                     <td>{{ count(json_decode($classroom->classParticipant, true)) }}</td>
                   @endif
-                  <td>{{ $classroom->created_at }}</td>
+                  <td>{{ $classroom->created_at->format('d F Y, H:i A') }}</td>
                   <td>
                     <form action="{{ route('updateRegistration')}}" method="POST" id="updateRegistration">
                       @csrf

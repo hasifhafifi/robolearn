@@ -62,7 +62,7 @@
                                 @endif
                             </td>
                             <td>
-                              <form action="{{ route('removemember', ['id' => $listmember->id]) }}" method="POST" class="d-inline">
+                              <form action="{{ route('removemember', ['id' => $listmember->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to remove: {{ $listmember->username }}?');">
                                 @csrf
                                 <button type="submit" class="btn btn-danger">Remove</button>
                               </form>

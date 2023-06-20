@@ -1,5 +1,16 @@
 @extends ('layouts.app')
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to update profile:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="pagetitle">
   <h1>Profile</h1>
   <nav>
@@ -123,34 +134,35 @@
                     <label for="username" class="col-md-4 col-lg-3 col-form-label">Username</label>
                     <div class="col-md-8 col-lg-9">
                       <input name="username" type="text" class="form-control" id="username" value="{{ $userDetails->username }}" readonly>
+                      <small>*Username cannot be changed</small>
                     </div>
                   </div>
 
                   <div class="row mb-3">
                     <label for="firstname" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="firstname" type="text" class="form-control" id="firstname" value="{{ $userDetails->firstname }}">
+                      <input name="firstname" type="text" class="form-control @error('firstname') is-invalid @enderror" id="firstname" value="{{ $userDetails->firstname }}">
                     </div>
                   </div>
 
                   <div class="row mb-3">
                     <label for="lastname" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="lastname" type="text" class="form-control" id="lastname" value="{{ $userDetails->lastname }}">
+                      <input name="lastname" type="text" class="form-control @error('lastname') is-invalid @enderror" id="lastname" value="{{ $userDetails->lastname }}">
                     </div>
                   </div>
 
                   <div class="row mb-3">
                     <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="address" type="text" class="form-control" id="address" value="{{ $userDetails->address }}">
+                      <input name="address" type="text" class="form-control @error('address') is-invalid @enderror" id="address" value="{{ $userDetails->address }}">
                     </div>
                   </div>
 
                   <div class="row mb-3">
                     <label for="phonenum" class="col-md-4 col-lg-3 col-form-label">Phone</label>
                     <div class="col-md-8 col-lg-9">
-                      <input name="phonenum" type="text" class="form-control" id="phonenum" value="{{ $userDetails->phonenum }}">
+                      <input name="phonenum" type="text" class="form-control @error('phonenum') is-invalid @enderror" id="phonenum" value="{{ $userDetails->phonenum }}">
                     </div>
                   </div>
 
@@ -158,6 +170,7 @@
                     <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                     <div class="col-md-8 col-lg-9">
                       <input name="email" type="email" class="form-control" id="email" value="{{ $userDetails->email }}" readonly>
+                      <small>*Email cannot be changed</small>
                     </div>
                   </div>
 

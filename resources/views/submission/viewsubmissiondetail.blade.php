@@ -23,7 +23,12 @@
               @csrf
               <div class="form-group mb-3">
                 <label for="editsubname">Submission Name:</label>
-                <input type="text" class="form-control" id="editsubname" name="editsubname" value="{{ $submission->submissionName }}" required>
+                <input type="text" class="form-control @error('editsubname') is-invalid @enderror" id="editsubname" name="editsubname" value="{{ $submission->submissionName }}" required>
+                @error('editsubname')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
               </div>
               <div class="form-group mb-3">
                 <label for="editsubcontent">Submission Description:</label>

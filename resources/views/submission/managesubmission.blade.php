@@ -10,7 +10,7 @@
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item"><a href="{{ route('activeclasslist') }}">Class</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('activeclasslistsub') }}">Class</a></li>
         <li class="breadcrumb-item"><a href="{{ route('viewSubmissionById', ['id' => $submission->classID]) }}">Submissions</a></li>
         <li class="breadcrumb-item active">{{ $submission->submissionName }}</li>
       </ol>

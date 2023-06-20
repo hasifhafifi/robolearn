@@ -96,7 +96,7 @@ class LivestreamController extends Controller
         return view('livestreampartialtable', compact('reports'));
     }
 
-    public function addLivestream()
+    public function addLivestream(Request $request)
     {
         // Validate the form data
         $validatedData = request()->validate([
@@ -118,8 +118,22 @@ class LivestreamController extends Controller
         $streamDesc = $validatedData['streamdesc'];
         $streamDate = $validatedData['streamdate'];
         $streamTime = $validatedData['streamtime'];
-        $ytStreamId = $validatedData['ytstreamid'];
+        // $ytStreamId = $validatedData['ytstreamid'];
         $classroomId = $validatedData['classSelect'];
+
+        $videoLink = $request->input('ytstreamid');
+        $videoId = '';
+
+        // Extract video ID from the link
+        $parsedUrl = parse_url($videoLink);
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $query);
+            if (isset($query['v'])) {
+                $videoId = $query['v'];
+            }
+        }
+
+        $ytStreamId = $videoId;
 
         // Create a new Livestream instance
         $livestream = new Livestream();
@@ -146,6 +160,16 @@ class LivestreamController extends Controller
 
     public function editLivestream(Request $request)
     {
+        // Validate the form data
+        $validatedData = request()->validate([
+            'editstreamname' => 'required|string|max:255',
+            'editstreamdesc' => 'string|max:255',
+            'editstreamdate' => 'required|date',
+            'editstreamtime' => 'required',
+            'editytstreamid' => 'required|string|max:255',
+            'editclassSelect' => 'required|integer',
+        ]);
+
         $livestream = Livestream::findOrFail($request->input('livestreamID'));
 
         // Update the livestream attributes with the new values
@@ -153,7 +177,21 @@ class LivestreamController extends Controller
         $livestream->streamDesc = $request->input('editstreamdesc');
         $livestream->streamDate = $request->input('editstreamdate');
         $livestream->streamTime = $request->input('editstreamtime');
-        $livestream->yt_streamID = $request->input('editytstreamid');
+        $livestream->classroomID = $request->input('editclassSelect');
+
+        $videoLink = $request->input('editytstreamid');
+        $videoId = '';
+
+        // Extract video ID from the link
+        $parsedUrl = parse_url($videoLink);
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $query);
+            if (isset($query['v'])) {
+                $videoId = $query['v'];
+            }
+        }
+
+        $livestream->yt_streamID = $videoId;
         
         // Save the changes
         $livestream->save();

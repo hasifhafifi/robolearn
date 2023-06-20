@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to create new group:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="pagetitle">
     <h1>Manage Participant</h1>
     <nav>
@@ -15,39 +26,37 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="d-flex justify-content-between">
-                <div class="">
-                  <h5 class="card-title">Group</h5>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        @if(!($classrooms->isEmpty()))
+              <div class="col-lg-6">
+                <h5 class="card-title">Group</h5>
+              </div>
+              <div class="col-lg-6 mt-2">
+                <div class="row">
+                  <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    @if(!($classrooms->isEmpty()))
                         <button  type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#creategroup">
                             <i class="bi bi-plus-circle"></i><span>&nbspGroup</span>
                          </button>
-                         @endif
-                    </div>
-                    <div>
-                        <form action="">
-                        <select name="classDropdown" id="classDropdown" class="form-select">
-                            @if($classrooms->isEmpty())
-                            <option value="">None</option>
-                            @else
-                                @foreach($classrooms as $class)
-                                    <option value="{{ $class->id }}">{{ $class->className }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </form>
-                    </div>
+                    @endif
                   </div>
+                  <div class="col-md-6">
+                    <form action="">
+                      <select name="classDropdown" id="classDropdown" class="form-select">
+                          @if($classrooms->isEmpty())
+                          <option value="">None</option>
+                          @else
+                              @foreach($classrooms as $class)
+                                  <option value="{{ $class->id }}">{{ $class->className }}</option>
+                              @endforeach
+                          @endif
+                      </select>
+                  </form>
+                  </div>
+                </div>
               </div>
             </div>
-            
              
              <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
@@ -78,7 +87,7 @@
                     @else
                       <td>{{ count($memberArray) }}</td>
                     @endif
-                    <td>{{ $group->created_at }}</td>
+                    <td>{{ $group->created_at->format('d F Y, H:i A') }}</td>
                     <td>
                         <form action="{{ route('deleteGroup') }}" method="POST" id="removeForm" onsubmit="return confirm('Are you sure you want to delete this group?');">
                             @csrf
@@ -165,7 +174,7 @@
                             '<td>' + (index+1) + '</td>' +
                             '<td><a href="' + url + '">' + group.name +'</a></td>' +
                             '<td>' + count + '</td>' +
-                            '<td>' + group.created_at + '</td>' +
+                            '<td>' + group.created_at_formatted + '</td>' +
                             '<td><form method="POST" action="' + deleteUrl + '" onsubmit="return confirm(\''+confirmmsg+'\');">' + 
                                 '@csrf' + 
                                 '<input type="hidden" name="groupID" id="groupID" value="' + group.id + '">' +

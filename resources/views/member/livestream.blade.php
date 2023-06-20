@@ -3,6 +3,7 @@
 @section('content')
 @if ($errors->any())
     <div class="alert alert-danger">
+      Failed to create new livestream:
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -112,7 +113,7 @@
                 </div>
                 
                 <div class="form-group mb-3">
-                  <label for="classname">Youtube Livestream ID:</label>
+                  <label for="classname">Youtube Livestream Link:</label>
                   <input type="text" class="form-control" id="ytstreamid" name="ytstreamid" value="{{ old('ytstreamid') }}">
                 </div>
 
@@ -168,7 +169,7 @@
               </div>
               
               <div class="form-group mb-3">
-                <label for="classname">Youtube Livestream ID:</label>
+                <label for="classname">Youtube Livestream Link:</label>
                 <input type="text" class="form-control" id="editytstreamid" name="editytstreamid">
               </div>
 
@@ -205,8 +206,13 @@
       $('#editstreamdesc').val(response.streamDesc);
       $('#editstreamdate').val(response.streamDate);
       $('#editstreamtime').val(response.streamTime);
-      $('#editytstreamid').val(response.yt_streamID);
-      // ... continue updating other fields
+      $('#editytstreamid').val("https://www.youtube.com/watch?v=" + response.yt_streamID);
+      
+      // Get the selected class ID
+      var selectedClassId = response.classroomID;
+          
+      // Set the selected option in the class select element
+      $('#editclassSelect').val(selectedClassId);
     },
     error: function(xhr, status, error) {
       // Handle the error here

@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+      Failed to add add new module:
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
 <style>
@@ -31,20 +42,25 @@
 <section class="section">
     <div class="row">
       <div class="col-lg-12">
-        <div class="card">
+        <div class="card border border-dark">
           <div class="card-body">
-            <h5 class="card-title">Module Content</h5>
-            @if(Auth::user()->usertype != '1')
-              <div class="position-absolute top-0 end-0 p-3">
-                <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSectionModal">
-                    <i class="bi bi-plus-circle"></i><span>&nbspAdd Section</span>
-                </button>
+            <div class="row">
+              <div class="col-lg-6">
+                <h5 class="card-title">Module Content</h5>
               </div>
-            @endif
+              <div class="col-lg-6 d-flex align-items-center justify-content-end">
+                @if(Auth::user()->usertype != '1')
+                    <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSectionModal">
+                        <i class="bi bi-plus-circle"></i><span>&nbspAdd Section</span>
+                    </button>
+                @endif
+              </div>
+            </div>
+
             {{-- contenthere --}}
             <div class="row">
               @if($sections->isEmpty())
-              <div class="card shadow lg p-3 mb-5 bg-white rounded">
+              <div class="card shadow lg p-3 mb-5 bg-white rounded border border-dark">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-center">
                     <div class="card-title">No Data</div>
@@ -58,27 +74,63 @@
               </div>
               @else
               @foreach($sections as $index=>$section)
-              <div class="card shadow lg p-3 mb-5 bg-white rounded">
+              <div class="card shadow lg p-3 mb-5 bg-white rounded border border-dark">
                 <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="card-title">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div>
                       {{ $index+1 }}. {{ $section->secTitle }}
                       @if(Auth::user()->usertype != '1' && $section->isHidden == true)
                         <i class="bi bi-eye-slash"></i>
                       @endif
                     </div>
-                    @if(Auth::user()->usertype != '1')
-                      <div class="d-flex justify-content-between align-items-center">
-                        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addContentModal" onclick="getSectionID('{{ $section->id }}')"><i class="bi bi-plus-circle"></i><span>&nbspAdd Content</span></button>
-                        <button class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#editSectionModal" onclick="getSection('{{ $section->id }}')">Edit</button>
-                        <form action="{{ route('deleteSection') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete section: {{ $section->secTitle }} and all its contents?');">
-                          @csrf
-                          <input type="hidden" name="sectionid" id="sectionid" value="{{ $section->id }}">
-                          <button type="submit" class="btn btn-danger me-2">Delete</button>
-                        </form>
+                    
+                    <div class="dropdown ms-auto">
+                      @if(Auth::user()->usertype != '1')
+                      <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <span class="dropdown-item">
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#addContentModal" onclick="getSectionID('{{ $section->id }}')"><i class="bi bi-plus-circle mx-2"></i><span> Add Content</span></button>
+                          </span>
+                        </li>
+                        <li>
+                          <span class="dropdown-item">
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#editSectionModal" onclick="getSection('{{ $section->id }}')"><i class="bi bi-pencil-square mx-2"></i> Edit</button>
+                          </span>
+                        </li>
+                        <li>
+                          <span class="dropdown-item">
+                          <form action="{{ route('deleteSection') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete section: {{ $section->secTitle }} and all its contents?');">
+                            @csrf
+                            <input type="hidden" name="sectionid" id="sectionid" value="{{ $section->id }}">
+                            <button type="submit" class="btn"><i class="bi bi-trash mx-2"></i> Delete</button>
+                          </form>
+                          </span>
+                        </li>
+                      </ul>
+                      @endif
+                    </div>
+                    {{-- <div class="col-lg-6 d-flex align-items-center justify-content-end">
+                      <div class="row">
+                        @if(Auth::user()->usertype != '1')
+                        <div class="col-md-6 mb-2 d-flex justify-content-end">
+                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContentModal" onclick="getSectionID('{{ $section->id }}')"><i class="bi bi-plus-circle"></i><span>&nbspAdd Content</span></button>
+                        </div>
+                        <div class="col-md-3 mb-2 d-flex justify-content-between">
+                          <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editSectionModal" onclick="getSection('{{ $section->id }}')">Edit</button>
+                        </div>
+                        <div class="col-md-3 mb-2 d-flex justify-content-start">
+                          <form action="{{ route('deleteSection') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete section: {{ $section->secTitle }} and all its contents?');">
+                            @csrf
+                            <input type="hidden" name="sectionid" id="sectionid" value="{{ $section->id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
+                        </div>
+                        @endif
                       </div>
-                    @endif
+                    </div> --}}
                   </div>
+
                   @php $indexDoc = 0; @endphp
                   @foreach($documents as $document)
                     @if($document->sectionID == $section->id)
@@ -93,17 +145,28 @@
                             @endif
                           </div>
                           @if(Auth::user()->usertype != '1')
-                            <div class="d-flex justify-content-between align-items-center">
-                              <form action="{{ route('viewContent', ['id' => $document->id]) }}">
-                                @csrf
-                                  <button class="btn btn-primary me-2" type="submit">Edit</button>
-                              </form>
-                              <form action="{{ route('deleteContent') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete content: {{ $document->docTitle }}?');">
-                                @csrf
-                                <input type="hidden" name="contentid" id="contentid" value="{{ $document->id }}">
-                                <button type="submit" class="btn btn-danger me-2">Delete</button>
-                              </form>
-                            </div>
+                          <div class="dropdown ms-auto">
+                            <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <span class="dropdown-item">
+                                  <form action="{{ route('viewContent', ['id' => $document->id]) }}">
+                                    @csrf
+                                    <button type="submit" class="btn"><i class="bi bi-pencil-square mx-2"></i> Edit</button>
+                                  </form>
+                                </span>
+                              </li>
+                              <li>
+                                <span class="dropdown-item">
+                                  <form action="{{ route('deleteContent') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete content: {{ $document->docTitle }}?');">
+                                    @csrf
+                                    <input type="hidden" name="contentid" id="contentid" value="{{ $document->id }}">
+                                    <button type="submit" class="btn"><i class="bi bi-trash mx-2"></i> Delete</button>
+                                  </form>
+                                </span>
+                              </li>
+                            </ul>
+                          </div>
                           @endif
                         </div>
                           {!! $document->docDesc !!}

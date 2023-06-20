@@ -7,6 +7,7 @@
 
 @if ($errors->any())
     <div class="alert alert-danger">
+      Failed to add submission:
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -91,7 +92,11 @@
                             </div>
                         </td>
                         @else
-                        <td>Status</td>
+                        @if(isset($submission->status))
+                        <td>{{$submission->status}}</td>
+                        @else
+                        <td>No Submission</td>
+                        @endif
                         @endif
                     </tr>
                     @endforeach

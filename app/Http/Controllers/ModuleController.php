@@ -472,6 +472,10 @@ class ModuleController extends Controller
 
     public function editSection(Request $request)
     {
+        $validator = request()->validate([
+            'editsectionname' => 'required|max:255',
+        ]);
+
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
 
         DB::table('sections')
@@ -539,6 +543,12 @@ class ModuleController extends Controller
 
     public function editContent(Request $request)
     {
+        // Validate the request data
+        $validator = request()->validate([
+            'editcontentname' => 'required|max:255',
+            'editcontentdetail' => 'required|max:255',
+        ]);
+
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
 
         $document = Document::where('id', $request->input('editcontentid'))->first();
@@ -610,8 +620,15 @@ class ModuleController extends Controller
         $file->moduleID = $document->moduleID;
 
         if($request->input('filetype') == 'text'){
+            $validator = request()->validate([
+                'filetext' => 'required',
+            ]);
             $file->fileContent = $request->input('filetext');
         } elseif ($request->input('filetype') == 'image') {
+            $validator = request()->validate([
+                'filecontent' => 'required',
+            ]);
+
             if ($request->hasFile('filecontent')) {
                 $imageFile = $request->file('filecontent');
                 $imageName = time() . '.' . $imageFile->getClientOriginalExtension();
@@ -627,6 +644,10 @@ class ModuleController extends Controller
                 $file->fileContent = $imageName;
             }
         } elseif ($request->input('filetype') == 'pdf') {
+            $validator = request()->validate([
+                'filepdf' => 'required',
+            ]);
+
             if ($request->hasFile('filepdf')) {
                 // Check if the file type is different from the current file type
                 $newFile = $request->file('filepdf');
@@ -641,6 +662,10 @@ class ModuleController extends Controller
                 $file->fileContent = $fileName;
             }
         } elseif ($request->input('filetype') == 'zip') {
+            $validator = request()->validate([
+                'filezip' => 'required',
+            ]);
+
             if ($request->hasFile('filezip')) {
                 // Check if the file type is different from the current file type
                 $newFile = $request->file('filezip');
@@ -655,6 +680,10 @@ class ModuleController extends Controller
                 $file->fileContent = $fileName;
             }
         } elseif ($request->input('filetype') == 'docx') {
+            $validator = request()->validate([
+                'filedoc' => 'required',
+            ]);
+
             if ($request->hasFile('filedoc')) {
                 // Check if the file type is different from the current file type
                 $newFile = $request->file('filedoc');
@@ -669,8 +698,16 @@ class ModuleController extends Controller
                 $file->fileContent = $fileName;
             }
         } elseif ($request->input('filetype') == 'url') {
+            $validator = request()->validate([
+                'fileurl' => 'required',
+            ]);
+
             $file->fileContent = $request->input('fileurl');
         } elseif ($request->input('filetype') == 'yturl') {
+            $validator = request()->validate([
+                'fileyturl' => 'required',
+            ]);
+
             $videoLink = $request->input('fileyturl');
             $videoId = '';
 
@@ -1228,6 +1265,15 @@ class ModuleController extends Controller
     public function editSubmissionDetail(Request $request)
     {
         // dd($request);
+        // Validate the submitted data
+        $validatedData = $request->validate([
+            'editsubname' => 'required|max:255',
+            'editsubcontent' => 'required',
+            'submissiontype' => 'required',
+            'duedate' => 'required|date|after_or_equal:today',
+            'duetime' => 'required',
+        ]);
+
         $submission = Submission::where('id', $request->input('editsubid'))->first();
         
         //edit submission
@@ -1511,7 +1557,7 @@ class ModuleController extends Controller
     {
         //get classroom based on id
         $classroom = Classroom::where('classCode', Auth::user()->participants->participant_classcode)->first();
-
+        
         $submissions = Submission::where('classID', $classroom->id)->where('ishidden', false)->get();
 
         if(!$submissions->isEmpty()){
@@ -1530,6 +1576,12 @@ class ModuleController extends Controller
 
                 $submission->setAttribute('formattedDate', $formattedDate);
                 $submission->setAttribute('formattedTime', $formattedTime);
+
+                if(SubmissionFile::where('userID', Auth::user()->id)->where('submissionID', $submission->id)->first()){
+                    $status = "Submitted";
+                    $submission->setAttribute('status', $status);
+                }
+                // $status = SubmissionFile::where('userID', Auth::user()->id)->where('submissionID', $submission)->first();
             }
         }
 
