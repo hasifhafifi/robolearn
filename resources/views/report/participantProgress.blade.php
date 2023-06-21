@@ -40,7 +40,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                @foreach($files as $index=>$file)
+                @php
+                 $index = 0;   
+                @endphp
+                @foreach($files as $file)
                     @if($file->moduleID == $module->id)
                         <tr>
                             <td>{{$index+1}}</td>
@@ -63,6 +66,9 @@
                                 @endif
                             @endforeach
                         </tr>
+                        @php
+                          $index++;   
+                        @endphp
                     @endif
                  @endforeach
                         </tbody>

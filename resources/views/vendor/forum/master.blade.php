@@ -98,11 +98,6 @@
         opacity: 0.65;
     }
 
-    #main
-    {
-        padding: 2em;
-    }
-
     .shadow-sm
     {
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -198,13 +193,7 @@
         background: var(--bs-light);
     }
 
-    @media (max-width: 575.98px)
-    {
-        #main
-        {
-            padding: 1em;
-        }
-    }
+
     </style>
 </head>
 <body>
@@ -212,8 +201,8 @@
 
         <div class="d-flex align-items-center justify-content-between">
         <i class="bi bi-list toggle-sidebar-btn"></i>
-        <a href="{{ route('home') }}" class="logo d-flex align-items-center">
-            <img src="{{ asset('assets/img/robolearn.png') }}" alt="">
+        <a href="{{ route('home') }}" class="logo d-flex align-items-center mt-2">
+            <img src="{{ asset('assets/img/robolearn.png') }}" alt="" height="300px">
             {{-- <span class="d-none d-lg-block">NiceAdmin</span> --}}
         </a>
         </div><!-- End Logo --> 
@@ -237,93 +226,10 @@
             @else
                 <li class="nav-item dropdown">
 
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-                    <i class="bi bi-bell"></i>
-                    <span class="badge bg-primary badge-number">4</span>
-                </a><!-- End Notification Icon -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-                    <li class="dropdown-header">
-                    You have 4 new notifications
-                    <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                    </li>
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                    <i class="bi bi-exclamation-circle text-warning"></i>
-                    <div>
-                        <h4>Lorem Ipsum</h4>
-                        <p>Quae dolorem earum veritatis oditseno</p>
-                        <p>30 min. ago</p>
-                    </div>
-                    </li>
-
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                    <i class="bi bi-x-circle text-danger"></i>
-                    <div>
-                        <h4>Atque rerum nesciunt</h4>
-                        <p>Quae dolorem earum veritatis oditseno</p>
-                        <p>1 hr. ago</p>
-                    </div>
-                    </li>
-
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                    <i class="bi bi-check-circle text-success"></i>
-                    <div>
-                        <h4>Sit rerum fuga</h4>
-                        <p>Quae dolorem earum veritatis oditseno</p>
-                        <p>2 hrs. ago</p>
-                    </div>
-                    </li>
-
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-
-                    <li class="notification-item">
-                    <i class="bi bi-info-circle text-primary"></i>
-                    <div>
-                        <h4>Dicta reprehenderit</h4>
-                        <p>Quae dolorem earum veritatis oditseno</p>
-                        <p>4 hrs. ago</p>
-                    </div>
-                    </li>
-
-                    <li>
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li class="dropdown-footer">
-                    <a href="#">Show all notifications</a>
-                    </li>
-
-                </ul><!-- End Notification Dropdown Items -->
-
-                </li><!-- End Notification Nav -->
-
-                <li class="nav-item dropdown">
-
-                <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                <a class="nav-link nav-icon" href="{{ route('chat') }}">
                     <i class="bi bi-chat-left-text"></i>
                     <span class="badge bg-success badge-number">{{ App\Models\ChMessage::where('to_id', auth()->id())->where('seen', 0)->count() }}</span>
                 </a><!-- End Messages Icon -->
-
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
-                    <li class="dropdown-header">
-                    You have {{ App\Models\ChMessage::where('to_id', auth()->id())->where('seen', 0)->count() }} new messages
-                    <a href="{{ route('chat') }}"><span class="badge rounded-pill bg-primary p-2 ms-2">View all</span></a>
-                    </li>
-
-                </ul><!-- End Messages Dropdown Items -->
 
                 </li><!-- End Messages Nav -->
 
@@ -390,66 +296,14 @@
         @include('layouts.sidebar')
     </aside>
     <!-- End Sidebar-->
-
-    {{-- <nav class="v-navbar navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url(config('forum.web.router.prefix')) }}">Laravel Forum</a>
-            <button class="navbar-toggler" type="button" :class="{ collapsed: isCollapsed }" @click="isCollapsed = ! isCollapsed">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" :class="{ show: !isCollapsed }">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url(config('forum.web.router.prefix')) }}">{{ trans('forum::general.index') }}</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('forum.recent') }}">{{ trans('forum::threads.recent') }}</a>
-                    </li>
-                    @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('forum.unread') }}">{{ trans('forum::threads.unread_updated') }}</a>
-                        </li>
-                    @endauth
-                    @can ('moveCategories')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('forum.category.manage') }}">{{ trans('forum::general.manage') }}</a>
-                        </li>
-                    @endcan
-                </ul>
-                <ul class="navbar-nav">
-                    @if (Auth::check())
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" @click="isUserDropdownCollapsed = ! isUserDropdownCollapsed">
-                                {{ $username }}
-                            </a>
-                            <div class="dropdown-menu" :class="{ show: ! isUserDropdownCollapsed }" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    Log out
-                                </a>
-                                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/login') }}">Log in</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/register') }}">Register</a>
-                        </li>
-                    @endif
-                </ul>
-            </div>
-        </div>
-    </nav> --}}
+    <main id="main" class="main">
     <div class="row">
 
         <!-- Left side columns -->
-        <div class="col-lg-9">
+        <div class="col-lg-12">
           <div class="row">
 
-        <div id="main" class="container">
+        <div id="mainn" class="container">
             @include('forum::partials.breadcrumbs')
             @include('forum::partials.alerts')
             <section class="section">
@@ -463,9 +317,11 @@
                   </div>
                 </div>
             </section>
-            
         </div>
-
+          </div>
+        </div>
+    </div>
+    </main>
     <div class="mask"></div>
     <!-- ======= Footer ======= -->
     <footer id="footer" class="footer">
@@ -477,10 +333,8 @@
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
         </div>
     </footer><!-- End Footer -->
-    </div>
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -653,3 +507,4 @@
     @yield('footer')
 </body>
 </html>
+

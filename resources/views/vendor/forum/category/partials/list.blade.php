@@ -1,4 +1,4 @@
-<div class="category list-group my-4">
+<div class=" list-group my-4">
     <div class="list-group-item shadow-sm">
         <div class="row align-items-center text-center">
             <div class="col-sm text-md-start">

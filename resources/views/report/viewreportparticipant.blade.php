@@ -36,6 +36,7 @@
                 <div class="tab-content pt-2">
                     
                     <div class="tab-pane fade show active ranking" id="ranking">
+                      <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover table-responsive">
                             <thead>
                                 <th>No</th>
@@ -68,6 +69,7 @@
                                 @endif
                             </tbody>
                          </table>
+                        </div>
                     </div>
 
                   <div class="tab-pane fade show group" id="group">

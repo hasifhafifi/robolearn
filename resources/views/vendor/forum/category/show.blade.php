@@ -133,7 +133,9 @@
                         {{ trans('forum::threads.none_found') }}
                         @can ('createThreads', $category)
                             <br>
+                            @if(Auth::user()->usertype != '1')
                             <a href="{{ Forum::route('thread.create', $category) }}">{{ trans('forum::threads.post_the_first') }}</a>
+                            @endif
                         @endcan
                     </div>
                 </div>

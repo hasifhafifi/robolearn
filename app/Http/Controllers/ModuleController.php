@@ -1183,7 +1183,8 @@ class ModuleController extends Controller
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         $errorMessage = 'Invalid file type. Please select a valid file type.';
         $successMessage = 'File has been submitted succesfully.';
-        $submissionFile = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
+        // $submissionFile = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
+        // dd($submissionFile);
         
         //calculate time left
         $carbonTime = Carbon::createFromFormat('H:i:s', $submission->duetime);
@@ -1215,7 +1216,9 @@ class ModuleController extends Controller
 
             if($submission->submissionType != 'allfile'){
                 if($submission->submissionType != $extension){
-                    return view('module.addsubmission', compact('submission', 'document', 'module', 'errorMessage'));
+                    // return view('module.addsubmission', compact('submission', 'document', 'module', 'errorMessage'));
+                    // return redirect()->route('submission.addsubmission', compact('submission'))->with('error', 'Wrong File Extension');
+                    return view('submission.addsubmission', compact('submission', 'errorMessage'));
                 } 
             }
             
@@ -1317,7 +1320,6 @@ class ModuleController extends Controller
 
     public function editSubmittedFile(Request $request)
     {
-        // dd($request->all());
         $user = User::where('id', Auth::user()->id)->first();
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         $errorMessage = 'Invalid file type. Please select a valid file type.';
@@ -1387,8 +1389,8 @@ class ModuleController extends Controller
             return redirect()->route('viewSubmission', ['id' => $submission->id])->with('success', $successMessage);
             // return view('module.viewsubmission', compact('submission', 'document', 'module', 'submissionFile', 'successMessage'));
         } else {
-            return view('submission.addsubmission', compact('submission', 'document', 'module', 'errorMessage'));
-            // return redirect()->route('viewSubmission', ['id' => $submission->id])->with('error', $errorMessage);
+            // return view('submission.addsubmission', compact('submission', 'errorMessage'));
+            return redirect()->route('viewSubmission', ['id' => $submission->id])->with('error', $errorMessage);
         }
     }
 

@@ -129,11 +129,11 @@
           </a>
         </li>
         @if(Auth::user()->usertype == '3')
-        <li>
+        {{-- <li>
           <a href="{{ route('adminCreateTemplate') }}">
             <i class="bi bi-circle"></i><span>Report Template</span>
           </a>
-        </li>
+        </li> --}}
         @endif
       </ul>
     </li>
