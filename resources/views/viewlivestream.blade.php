@@ -6,7 +6,11 @@
   <nav>
   <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+      @if(Auth::user()->usertype != '1')
       <li class="breadcrumb-item"><a href="{{ route('livestream') }}">List of Livestream</a></li>
+      @else
+      <li class="breadcrumb-item"><a href="{{ route('livestreambyclass') }}">List of Livestream</a></li>
+      @endif
       <li class="breadcrumb-item active">Livestream</li>
   </ol>
   </nav>
@@ -23,7 +27,7 @@
             <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ $livestream->yt_streamID }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
             <div class="d-flex justify-content-center mt-2">
-               <iframe width="560px" height="315px" src="https://www.youtube.com/live_chat?v={{ $livestream->yt_streamID }}&amp;embed_domain=http://127.0.0.1:8000" ></iframe>
+               {{-- <iframe width="560px" height="315px" src="https://www.youtube.com/live_chat?v={{ $livestream->yt_streamID }}&amp;embed_domain=http://127.0.0.1:8000" ></iframe> --}}
             </div>
           </div>
         </div>

@@ -47,6 +47,8 @@ class HomeController extends Controller
                     }
                 }
             }
+
+            $user->setAttribute('className', $class->className);
             return view('home', compact('modules', 'user'));
         }
         $isVerifiedMember = session('isVerifiedMember');

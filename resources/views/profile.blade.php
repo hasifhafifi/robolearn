@@ -125,8 +125,8 @@
                   <div class="row mb-3">
                     <label for="profilepic" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                     <div class="col-md-8 col-lg-9">
-                      <img src="{{ asset('assets/img/profilepics/' . $userDetails->profilepic) }}" alt="Profile">
-                      <input id="profilepic" type="file" class="form-control-file" name="profilepic">
+                      <img id="preview-image" src="{{ asset('assets/img/profilepics/' . $userDetails->profilepic) }}" alt="Profile">
+                      <input id="profilepic" type="file" class="form-control-file" name="profilepic" onchange="previewFile(event)">
                     </div>
                   </div>
 
@@ -261,5 +261,22 @@
       </div>
     </div>
   </section>
+  <script>
+    function previewFile(event) {
+      var preview = document.getElementById('preview-image');
+      var file = event.target.files[0];
+      var reader = new FileReader();
+  
+      reader.onloadend = function() {
+        preview.src = reader.result;
+      }
+  
+      if (file) {
+        reader.readAsDataURL(file);
+      } else {
+        preview.src = "{{ asset('assets/img/profilepics/' . $userDetails->profilepic) }}";
+      }
+    }
+  </script>
 
 @endsection

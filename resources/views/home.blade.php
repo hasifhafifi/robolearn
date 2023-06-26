@@ -63,6 +63,9 @@
                         <p class="card-text"><strong>Email : </strong>{{$user->email}}</p>
                         <p class="card-text"><strong>Address : </strong>{{$user->address}}</p>
                         <p class="card-text"><strong>Phone Number : </strong>{{$user->phonenum}}</p>
+                        @if(Auth::user()->usertype == '1')
+                        <p class="card-text"><strong>Class : </strong>{{$user->className}}</p>
+                        @endif
                         <a href="{{route('profile')}}" class="btn btn-primary">Edit Profile</a>
                       </div>
                     </div>
