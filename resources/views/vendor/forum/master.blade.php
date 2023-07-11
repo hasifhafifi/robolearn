@@ -199,10 +199,10 @@
 <body>
     <header id="header" class="header fixed-top d-flex align-items-center">
 
-        <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-left">
         <i class="bi bi-list toggle-sidebar-btn"></i>
-        <a href="{{ route('home') }}" class="logo d-flex align-items-center mt-2">
-            <img src="{{ asset('assets/img/robolearn.png') }}" alt="" height="300px">
+        <a href="{{ route('home') }}" class="logo d-flex align-items-center">
+            <img src="{{ asset('assets/img/robolearn-crop.png') }}" alt="" height="50%" width="60%">
             {{-- <span class="d-none d-lg-block">NiceAdmin</span> --}}
         </a>
         </div><!-- End Logo --> 

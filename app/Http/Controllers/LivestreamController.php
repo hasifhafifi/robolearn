@@ -77,7 +77,7 @@ class LivestreamController extends Controller
     public function fetchReports(Request $request)
     {
         //ranking
-        $reports = Report::where('classID', $request->input('classroomId'))->orderBy('totalMarks', 'desc')->get();
+        $reports = Report::where('classID', $request->input('classroomId'))->orderBy('totalMarks', 'desc')->take(10)->get();
 
         foreach($reports as $report){
             if(isset($report->userID)){

@@ -32,6 +32,7 @@
                 <div class="tab-content pt-2">
     
                   <div class="tab-pane fade show active all-members" id="all-members">
+                    <div class="table-responsive">
                     <table class="table table-striped" id="tableall">
                         <thead>
                           <tr>
@@ -71,10 +72,11 @@
                           @endforeach
                         </tbody>
                       </table>
+                    </div>
                   </div>
     
                   <div class="tab-pane fade new-members pt-3" id="new-members">
-    
+                    <div class="table-responsive">
                     <table class="table table-striped" id="tablenew">
                         <thead>
                           <tr>
@@ -114,7 +116,7 @@
                           @endforeach
                         </tbody>
                       </table>
-    
+                    </div>
                   </div>
     
                 </div><!-- End Bordered Tabs -->

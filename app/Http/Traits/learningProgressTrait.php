@@ -74,7 +74,8 @@ trait learningProgressTrait{
         //get list of active classrooms
         $classroom = Classroom::where('classCode', $participant->participant_classcode)->first();
         
-        $modules = Module::where('classroomID', $classroom->id)->where('isHidden', false)->get();
+        // $modules = Module::where('classroomID', $classroom->id)->where('isHidden', false)->get();
+        $modules = Module::where('classroomID', $classroom->id)->get();
 
         // $user = Auth::user();
         // $participant = Participant::where('user_id', $user->id)->first();

@@ -36,9 +36,9 @@
                   <td>{{ $classroom->classCode }}</td>
                   @if(empty($classroom->classParticipant))
                     <td>
-                        <span class="percentage-badge badge bg-success">
-                            0
-                        </span>
+                        <button class="btn btn-success">
+                          0
+                        </button>
                     </td>
                   @else
                     <td>

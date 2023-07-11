@@ -49,7 +49,7 @@ class ReportController extends Controller
             $participant->setAttribute('username', $user->username);
             $participant->setAttribute('arrPercentage', $moduleCompletion);
         }
-        
+
         return view('report.learningprogress', compact('modules', 'participants', 'class'));
     }
 
@@ -346,14 +346,14 @@ class ReportController extends Controller
         //get report for group
         $group = Group::where('id', $user->participants->participant_groupID)->first();
         // $reportGroup = new Report();
-        if(isset($group)){
+        if(isset($group) && Report::where('groupID', $group->id)->first()){
             $reportGroup = Report::where('groupID', $group->id)->first();
             $participants = Participant::where('participant_groupID', $group->id)->get();
             $participantIDs = $participants->pluck('user_id');
             $users = User::whereIn('id', $participantIDs)->get();
             $group->setAttribute('groupMembers', $users);
         }
-
+        
         //ranking
         $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
 
@@ -373,7 +373,8 @@ class ReportController extends Controller
  
         //get report for individual
         $reportUser = Report::where('userID', $user->id)->first();
-        if(isset($group)){
+        if(isset($reportGroup)){
+            // dd($user);
             return view('report.viewreportparticipant', compact('user', 'group', 'reportGroup', 'reportUser', 'reports', 'class'));
         }else{
             return view('report.viewreportparticipant', compact('user', 'group', 'reportUser', 'reports', 'class'));
