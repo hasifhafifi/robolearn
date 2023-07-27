@@ -5,6 +5,7 @@
     <div class="d-flex flex-row justify-content-between mb-2">
         <h2 class="flex-grow-1">{{ trans('forum::general.index') }}</h2>
 
+        <!-- check if user is not participant -->
         @if(Auth::User()->usertype == '2' || Auth::User()->usertype == '3')
         @can ('createCategories')
             <button type="button" class="btn btn-primary" data-open-modal="create-category">
@@ -16,6 +17,7 @@
         @endif
     </div>
 
+    <!-- list all categories -->
     @foreach ($categories as $category)
         @include ('forum::category.partials.list', ['titleClass' => 'lead'])
     @endforeach

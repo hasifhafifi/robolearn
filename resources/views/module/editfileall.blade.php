@@ -26,16 +26,17 @@
              <h5 class="card-title">Edit File Details</h5>
              <form method="POST" action="{{ route('editFileAllType') }}" enctype="multipart/form-data">
               @csrf
+              <!-- name -->
               <div class="form-group mb-3">
                 <label for="editfilename">File Title:</label>
                 <input type="text" class="form-control" id="editfilename" name="editfilename" value="{{ $file->fileName }}" required>
               </div>
-
+              <!-- visibility -->
               <div class="form-group mb-3">
                 <label for="isHidden">Visibility:</label><br>
                 <input type="checkbox" id="isHidden" name="isHidden" {{ $file->ishidden ? 'checked' : '' }}>Hide File
               </div>
-
+              <!-- filetype -->
               <div class="form-group mb-3">
                 <label>File Type:</label><br>
                 {{ $file->fileType }}
@@ -51,7 +52,7 @@
                   <a href="{{ route('viewFileWord', ['id' => $file->id]) }}" target="_blank">{{ $file->fileContent }}</a>
                 @endif
               </div>
-
+              <!-- upload file -->
               <div class="form-group mb-3">
                 <label for="editfilecontent">New Document:</label><br>
                 <input type="file" id="editfilecontent" name="editfilecontent" class="form-control">

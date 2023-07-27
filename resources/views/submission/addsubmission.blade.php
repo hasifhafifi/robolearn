@@ -34,8 +34,6 @@
             </div>
             <form action="{{ route('submitFile') }}" enctype="multipart/form-data" method="POST">
                 @csrf
-                {{-- <div class="dropzone" id="myDropzone"></div> --}}
-                {{-- <button class="btn btn-primary" type="submit" id="submitButton">Submit</button> --}}
                 <div class="form-group mb-3">
                     <label for="filesubmit">Add File:</label>
                     <input type="file" name="filesubmit" id="filesubmit" class="form-control">

@@ -1,8 +1,8 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
     <div class="alert alert-danger">
+      <!-- display error message -->
       Failed to create new livestream:
         <ul>
             @foreach ($errors->all() as $error)
@@ -11,7 +11,6 @@
         </ul>
     </div>
 @endif
-
 
 <div class="pagetitle">
   <h1>Livestream</h1>
@@ -30,10 +29,13 @@
           <div class="card-body">
             <h5 class="card-title">Livestream</h5>
             <div class="position-absolute top-0 end-0 p-3">
+              <!-- add livestream button -->
               <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#livestreammodal">
                  <i class="bi bi-plus-circle"></i><span>&nbspAdd Livestream</span>
               </button>
             </div>
+
+            <!-- display list of livestream -->
             <div class="table-responsive">
               <table class="table table-striped datatable" id="tableall">
                 <thead>
@@ -49,6 +51,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- check if livestream exist -->
                   @if($livestreams->isEmpty())
                     <td colspan="6" class="text-center align-middle">No livestream</td>
                   @else
@@ -63,7 +66,9 @@
                       <td>{{ $livestream->formattedTime }}</td>
                       <td>
                         <div class="d-flex">
+                          <!-- edit livestream -->
                           <div type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#livestreameditmodal" onclick="getLivestream('{{ $livestream->id }}')">Edit</div>
+                          <!-- delete livestream -->
                           <form action="{{ route('deleteLivestream', $livestream->id) }}" method="POST">
                               @csrf
                               <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete the livestream: {{ $livestream->streamName }}?')">Delete</button>
@@ -193,6 +198,7 @@
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+  //to get the placeholder for editing the livestream
     function getLivestream(id) {
   $.ajax({
     url: '/livestream/edit/' + id,

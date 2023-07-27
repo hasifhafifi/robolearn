@@ -12,14 +12,12 @@
 
     <section>
         <div class="row">
-    
           <div class="col-lg-12">
-    
             <div class="card">
               <div class="card-body pt-3">
                 <!-- Bordered Tabs -->
                 <ul class="nav nav-tabs nav-tabs-bordered">
-    
+                  <!-- tab to choose to see all members or new members -->
                   <li class="nav-item">
                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#all-members">All Members</button>
                   </li>
@@ -30,7 +28,8 @@
     
                 </ul>
                 <div class="tab-content pt-2">
-    
+                  
+                  <!-- table for all registered members -->
                   <div class="tab-pane fade show active all-members" id="all-members">
                     <div class="table-responsive">
                     <table class="table table-striped" id="tableall">
@@ -74,7 +73,8 @@
                       </table>
                     </div>
                   </div>
-    
+                  
+                  <!-- table for new and unverified members -->
                   <div class="tab-pane fade new-members pt-3" id="new-members">
                     <div class="table-responsive">
                     <table class="table table-striped" id="tablenew">
@@ -103,10 +103,12 @@
                                 @endif
                             </td>
                             <td>
+                              <!-- form for verifying the member -->
                               <form action="{{ route('verifymember', ['id' => $newmember->id]) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-primary">Verify</button>
                               </form>
+                              <!-- form for deleting the member's data -->
                               <form action="{{ route('removemember', ['id' => $newmember->id]) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-danger">Remove</button>

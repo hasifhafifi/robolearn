@@ -1,11 +1,12 @@
 @extends('layouts.app')
-
 @section('content')
 @if(isset($successMessage))
+    <!-- display success message -->
     <div class="alert alert-success">{{ $successMessage }}</div>
 @endif
 
 @if ($errors->any())
+  <!-- display error message -->
     <div class="alert alert-danger">
       Failed to add submission:
         <ul>
@@ -36,6 +37,7 @@
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
              <div><h5 class="card-title">Submission</h5></div>
+             <!-- display add submission button for admin/member -->
              @if(Auth::user()->usertype != '1')
              <div>
                 <div data-bs-toggle="modal" data-bs-target="#addSubmissionModal">
@@ -44,7 +46,9 @@
             </div>
              @endif
             </div>
+            <!-- check if empty -->
             @if(!$submissions->isEmpty())
+            <!-- display all submissions -->
             <div class="table-responsive">
                 <table class="table table-striped datatable">
                 <thead>
@@ -64,7 +68,8 @@
                     @foreach($submissions as $index=>$submission)
                     <tr>
                         <td>{{ $index+1 }}</td>
-                        <td>    
+                        <td>
+                          <!-- different route for different user type -->    
                             @if(Auth::user()->usertype == '1')
                                 <a href="{{ route('viewSubmission', ['id' => $submission->id]) }}">{{$submission->submissionName}}</a>
                             @else
@@ -76,6 +81,7 @@
                         </td>
                         <td>{{ $submission->formattedDate }}</td>
                         <td>{{ $submission->formattedTime }}</td>
+                        <!-- display update/delete button for admin/member -->
                         @if(Auth::user()->usertype != '1')
                         <td>
                             <div class="d-flex">
@@ -92,6 +98,7 @@
                             </div>
                         </td>
                         @else
+                        <!-- check submission status by participant -->
                         @if(isset($submission->status))
                         <td>{{$submission->status}}</td>
                         @else
@@ -174,6 +181,7 @@
   <!-- Include the Quill library -->
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script>
+    //quill textarea
     $(document).ready(function(){
       var quill2 = new Quill('#submissiondetail', {
       theme: 'snow'

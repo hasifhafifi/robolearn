@@ -15,9 +15,11 @@ class UserController extends Controller
 
     public function index()
     {
+        //get the user model
         $userDetails = Auth::user();
 
         $isVerifiedMember = session('isVerifiedMember');
+
         return view('profile')
             ->with('userDetails', $userDetails)
             ->with('isVerifiedMember', $isVerifiedMember);
@@ -59,13 +61,14 @@ class UserController extends Controller
 
     public function changepassword(Request $request)
     {
-        
+        //validate the input
         $request->validate([
             'currentPassword' => 'required',
             'newPassword' => 'required|string|min:8',
             'renewPassword_confirmation' => 'required|string|min:8|same:newPassword',
         ]);
 
+        //save the new password
         $user = Auth::user();
         $current_password = $user->password;
         $inputCurrentPassword = $request->currentPassword;
@@ -82,6 +85,7 @@ class UserController extends Controller
 
     public function deleteaccount(Request $request)
     {
+        //validate the password
         $request->validate([
             'password' => 'required',
         ]);
@@ -90,6 +94,7 @@ class UserController extends Controller
         $userpassword = $user->password;
         $enteredpassword = $request->password;
 
+        //delete the user's details
         if (Hash::check($enteredpassword, $userpassword)) {
             if($user->usertype == 1){
                 $participant = Participant::where('user_id', $user->id)->first();

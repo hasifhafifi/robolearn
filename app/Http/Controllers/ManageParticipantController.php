@@ -22,6 +22,7 @@ class ManageParticipantController extends Controller
         //get participants for the first available class
         $classView = Classroom::where('isAvailable', 1)->first();
 
+        //set the default view for the participant's page
         if($classView){
             if(!empty($classView->classParticipant)){
                 $arrayParticipant = json_decode($classView->classParticipant,true);
@@ -40,7 +41,6 @@ class ManageParticipantController extends Controller
             }
         }
 
-        //  dd($classView);
         $isVerifiedMember = session('isVerifiedMember');
         return view('member.participant', compact('isVerifiedMember', 'classrooms', 'classView'));
     }
@@ -51,6 +51,8 @@ class ManageParticipantController extends Controller
         $emptyParticipant = [];
 
         $classid = $request->input('classid');
+
+        //get the classroom based on requester id
         $classView = Classroom::find($classid);
 
         if(!empty($classView->classParticipant)){
@@ -70,6 +72,7 @@ class ManageParticipantController extends Controller
 
     public function getParticipantDetails($id)
     {
+        //find user based on requested id
         $user = User::find($id);
 
         //get participant's group name if exist
@@ -84,9 +87,10 @@ class ManageParticipantController extends Controller
 
     public function removeParticipant(Request $request)
     {   
+        //find user based on requested id
         $id = $request->input('userID');
         $user = User::find($id);
-        // dd($user);
+        
         if (!$user) {
             return redirect()->back()->with('error', 'Participant not found.');
         }
@@ -105,7 +109,6 @@ class ManageParticipantController extends Controller
         }
 
         $updatedArray = json_encode($arrayParticipant);
-
         $class->classParticipant = $updatedArray;
         $class->save();
 
@@ -169,7 +172,6 @@ class ManageParticipantController extends Controller
             }
         }
 
-        //  dd($classView);
         $isVerifiedMember = session('isVerifiedMember');
         return view('member.group', compact('isVerifiedMember', 'classrooms', 'classView'));
     }
@@ -180,6 +182,7 @@ class ManageParticipantController extends Controller
         $emptyParticipant = [];
 
         $classid = $request->input('classid');
+        //find group based on requested id
         $classView = Classroom::find($classid);
 
         if(Group::where('classroom_id', $classView->id)->first()){
@@ -196,11 +199,13 @@ class ManageParticipantController extends Controller
 
     public function createGroup(Request $request)
     {
+        //validate the form data
         $validatedData = $request->validate([
             'classname' => 'required',
             'classSelect' => 'required',
         ]);
 
+        //save the new group
         $initArray = [];
         $group = new Group();
         $group->name = $request->input('classname');
@@ -213,9 +218,10 @@ class ManageParticipantController extends Controller
 
     public function deleteGroup(Request $request)
     {   
+        //find the group based on requested id
         $id = $request->input('groupID');
         $group = Group::find($id);
-        // dd($group);
+        
         if (!$group) {
             return redirect()->back()->with('error', 'Group not found.');
         }
@@ -238,10 +244,13 @@ class ManageParticipantController extends Controller
 
     public function getGroupDetails($id)
     {
+        //find group based on requested id
         $group = Group::find($id);
+        //get all participants for that group
         $participants = Participant::where('participant_groupID', $id)->get();
         $arrayUser = [];
 
+        //put the participant into the array
         if(Participant::where('participant_groupID', $id)->first()){
             foreach($participants as $participant){
                 $user = User::where('id', $participant->user_id)->first();
@@ -265,20 +274,19 @@ class ManageParticipantController extends Controller
             }
         }
 
-        // dd($participantArray);
         $isVerifiedMember = session('isVerifiedMember');
         return view('member.viewgroup', compact('isVerifiedMember', 'group', 'participantArray'));
     }
 
     public function assignParticipantToGroup(Request $request)
     {
+        //validate the form data
         $validatedData = $request->validate([
             'participant' => 'required',
             'groupID' => 'required',
         ]);
     
         // Check if the participant is already assigned to a group
-        // $user = User::find($request->input('participant'));
         $participant = Participant::where('user_id', $request->input('participant'))->first();
         if ($participant->participant_groupID != null) {
             return redirect()->back()->with('error', 'Participant is already assigned to a group');
@@ -296,12 +304,12 @@ class ManageParticipantController extends Controller
         $group->member = $convArraymember;
         $group->save();
 
-        // dd($request);
         return redirect()->back()->with('success', 'Participant added to group successfully.');
     }
 
     public function removeparticipantfromgroup(Request $request)
     {   
+        //find user based on id
         $id = $request->input('userID');
         $user = User::find($id);
         if (!$user) {
@@ -316,6 +324,7 @@ class ManageParticipantController extends Controller
             array_splice($arrayMember, $key, 1);
         }
 
+        //save the updated data
         $updatedArray = json_encode($arrayMember);
         $group->member = $updatedArray;
         $group->save();

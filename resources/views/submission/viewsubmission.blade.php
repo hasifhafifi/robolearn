@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if(isset($successMessage))
+    <!-- display success message -->
     <div class="alert alert-success">{{ $successMessage }}</div>
 @endif
 
@@ -21,6 +21,7 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
+            <!-- display submission detail -->
              <h5 class="card-title">Submission</h5>
              <table class="table table-striped table-bordered table-hover table-responsive">
                 <tr>
@@ -34,6 +35,7 @@
                 <tr>
                     <th>Submission Type</th>
                     <td>
+                      <!-- check for file type submission -->
                         @if($submission->submissionType == 'allfile')
                         All File
                         @else
@@ -43,6 +45,7 @@
                 </tr>
                 <tr>
                     <th>Submission Due</th>
+                    <!-- check if current time < due date -->
                     @if($submission->timeSign == 'negative')
                     <td class="table-danger">
                         <strong>Date and Time:</strong> {{ $submission->formattedTime }}, {{ $submission->formattedDate }}
@@ -59,7 +62,7 @@
                 </tr>
                 <tr>
                     <th>Submission</th>
-                    
+                    <!-- check for submitted file -->
                         @if(isset($submissionFile))
                         <td class="table-success">
                         Submitted
@@ -74,6 +77,7 @@
                 </tr>
              </table>
              <div class="d-flex justify-content-center align-items-center">
+              <!-- if there are no submission, display the add submission button -->
               @if(!isset($submissionFile))
                 <form action="{{ route('addSubmission') }}" method="POST">
                     @csrf
@@ -81,6 +85,7 @@
                     <button class="btn btn-primary">Add Submission</button>
                 </form>
               @else
+              <!-- if submission exist, display edit/delete button -->
               <div class="p-2">
                 <form action="{{ route('editSubmission') }}" method="POST">
                   @csrf

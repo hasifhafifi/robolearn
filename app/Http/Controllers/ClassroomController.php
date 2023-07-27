@@ -9,6 +9,7 @@ class ClassroomController extends Controller
 {
     public function index()
     {
+        //get all classrooms
         $classrooms = Classroom::all();
 
         $isVerifiedMember = session('isVerifiedMember');
@@ -39,10 +40,12 @@ class ClassroomController extends Controller
 
     public function changeClassStatus(Request $request)
     {
+        //find the classroom
         $class = Classroom::find($request->input('classroom_id'));
 
         $class->isAvailable = $request->input('isAvailable');
 
+        //save new data
         $class->save();
 
         return redirect()->back()->with('success', 'Class status has successfully changed.');
@@ -50,10 +53,12 @@ class ClassroomController extends Controller
 
     public function updateRegistration(Request $request)
     {
+        //find the classroom
         $class = Classroom::find($request->input('classID'));
 
         $class->isFull = $request->input('isFull');
 
+        //save the data
         $class->save();
 
         return redirect()->back();

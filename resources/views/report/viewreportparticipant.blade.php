@@ -12,29 +12,24 @@
 
     <section>
         <div class="row">
-    
           <div class="col-lg-12">
-    
             <div class="card">
               <div class="card-body pt-3">
                 <!-- Bordered Tabs -->
                 <ul class="nav nav-tabs nav-tabs-bordered">
-                    
+                  <!-- tabs for the page including ranking, group report and individual report -->
                   <li class="nav-item">
                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ranking">Ranking</button>
                   </li>
-
                   <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#group">Group Report</button>
                   </li>
-    
                   <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#individual">Individual Report</button>
                   </li>
-    
                 </ul>
                 <div class="tab-content pt-2">
-                    
+                    <!-- display the ranking table -->
                     <div class="tab-pane fade show active ranking" id="ranking">
                       <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover table-responsive">
@@ -71,7 +66,8 @@
                          </table>
                         </div>
                     </div>
-
+                  
+                  <!-- display the group report -->
                   <div class="tab-pane fade show group" id="group">
                     <table class="table table-striped table-bordered table-hover table-responsive">
                         @if(isset($reportGroup))
@@ -122,9 +118,9 @@
                         @endif
                      </table>
                   </div>
-    
-                  <div class="tab-pane fade individual pt-3" id="individual">
-    
+
+                  <!-- display the group report -->
+                  <div class="tab-pane fade individual pt-3" id="individual">  
                     <table class="table table-striped table-bordered table-hover table-responsive">
                         @if(isset($reportUser))
                         <tr>
@@ -165,24 +161,11 @@
                         </tr>
                         @endif
                      </table>
-    
                   </div>
-    
                 </div><!-- End Bordered Tabs -->
-    
               </div>
             </div>
-    
           </div>
         </div>
       </section>
-      <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-      <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-      <script>
-        $(document).ready(function() {
-            $('#tableall').DataTable();
-            $('#tablenew').DataTable();
-        });
-      </script>
-
 @endsection

@@ -31,6 +31,7 @@ class ModuleController extends Controller
         //get list of active classrooms
         $classroom = Classroom::where('classCode', Auth::user()->participants->participant_classcode)->first();
         
+        //get all the modules for that class
         $modules = Module::where('classroomID', $classroom->id)->where('isHidden', false)->get();
 
         $id = $classroom->id;
@@ -40,54 +41,10 @@ class ModuleController extends Controller
 
         $arrayModule = [];
 
-        //get module completion status
-        // if(!isset($participant->moduleCompletion)){
-        //     foreach($modules as $module){
-        //         $arrayModule[] = [
-        //             'modID' => $module->id,
-        //             'percentage' => 0
-        //         ];
-        //     }
-        //     $arrayModule = json_encode($arrayModule);
-        //     $participant->moduleCompletion = $arrayModule;
-        //     $participant->save();
-        // }else{
-        //     // Get the existing module completion status from the participant
-        //     $existingModules = json_decode($participant->moduleCompletion, true);
-
-        //     // Check if the number of existing modules is different from the total number of modules
-        //     if (count($existingModules) !== count($modules)) {
-        //         // Create an array to store the updated module completion status
-        //         $updatedModules = [];
-
-        //         // Loop through all the modules
-        //         foreach ($modules as $module) {
-        //             // Check if the module already exists in the existing module completion status
-        //             $existingModule = array_filter($existingModules, function ($item) use ($module) {
-        //                 return $item['modID'] == $module->id;
-        //             });
-
-        //             // If the module exists, add it to the updated module completion status
-        //             if (!empty($existingModule)) {
-        //                 $updatedModules[] = array_shift($existingModule);
-        //             } else {
-        //                 // If the module does not exist, add it with a percentage of 0
-        //                 $updatedModules[] = [
-        //                     'modID' => $module->id,
-        //                     'percentage' => 0
-        //                 ];
-        //             }
-        //         }
-
-        //         // Update the module completion status in the participant
-        //         $participant->moduleCompletion = json_encode($updatedModules);
-        //         $participant->save();
-        //     }
-        // }
-
+        //use traits to check and update the module completion status for participant
         $arr = $this->checkIfModuleCompletionExist($participant);
-        
-        // $arr = json_decode($participant->moduleCompletion, true);
+
+        //set the module completion percentage to the module for that participant
         foreach($arr as $a){
             foreach($modules as $module){
                 if($module->id == $a['modID']){
@@ -120,6 +77,7 @@ class ModuleController extends Controller
         //get classroom based on id
         $classroom = Classroom::where('id', $id)->first();
 
+        //get modules based on classroom id
         $modules = Module::where('classroomID', $id)->get();
 
         return view('module.module', compact('modules', 'id', 'classroom'));
@@ -127,17 +85,21 @@ class ModuleController extends Controller
 
     public function viewModule($id)
     {
+        //get module based on id
         $module = Module::where('id', $id)->first();
 
+        //get all the sections in that module
         $sections = DB::table('sections')
         ->select('*')
         ->where('moduleID', $id)
         ->orderBy('id', 'asc')
         ->get();
 
+        //get all the documents in that module
         $documents = Document::where('moduleID', $id)->get();
 
         $documentIDs = $documents->pluck('id');
+        //get all the files in that documents
         $files = File::whereIn('documentID', $documentIDs)->get();
 
         return view('module.viewmodule', compact('module', 'sections', 'documents', 'files'));
@@ -145,8 +107,10 @@ class ModuleController extends Controller
 
     public function viewModuleParticipant($id)
     {
+        //get the module based on id
         $module = Module::where('id', $id)->first();
 
+        //get all the sections in that module
         $sections = DB::table('sections')
         ->select('*')
         ->where('moduleID', $id)
@@ -154,68 +118,21 @@ class ModuleController extends Controller
         ->orderBy('id', 'asc')
         ->get();
 
+        //get all the documnets in that module
         $documents = Document::where('moduleID', $id)->where('isHidden', false)->get();
 
         $documentIDs = $documents->pluck('id');
+        //get all the files in that document
         $files = File::whereIn('documentID', $documentIDs)->where('isHidden', false)->get();
         $submissions = Submission::whereIn('documentID', $documentIDs)->get();
 
         $user = Auth::user();
         $participant = Participant::where('user_id', $user->id)->first();
-        // $allModules = Module::where('classroomID', $module->classroomID)->get();
-        // $allModulesIDs = $allModules->pluck('id');
-        // $allDocuments = Document::whereIn('moduleID', $allModulesIDs)->get();
-        // $allDocumentIDs = $allDocuments->pluck('id');
-        // $allFiles = File::whereIn('documentID', $allDocumentIDs)->get();
 
-        // $arrayFile = [];
+        //use trait to check the status of completion for that file for that participant
         $arr = $this->checkIfFileCompletionExist($participant);
-        //update fileCompletion column
-        // if(!isset($participant->fileCompletion)){
-        //     foreach($allFiles as $file){
-        //         $arrayFile[] = [
-        //             'modID' => $file->moduleID,
-        //             'fileID' => $file->id,
-        //             'status' => 0
-        //         ];
-        //     }
-        //     $arrayFile = json_encode($arrayFile);
-        //     $participant->fileCompletion = $arrayFile;
-        //     $participant->save();
-        // }else{
-        //     $existingFiles = json_decode($participant->fileCompletion, true);
-            
-        //      // Compare the count of existing files with the count of files set by the member
-        //     if (count($existingFiles) !== count($allFiles)) {
 
-        //         // Update the array with the new files
-        //         $updatedFiles = [];
-        //         foreach ($allFiles as $file) {
-        //             // Check if the file already exists in the array
-        //             $existingFile = array_filter($existingFiles, function ($item) use ($file) {
-        //                 return $item['fileID'] === $file->id;
-        //             });
-
-        //             if (!empty($existingFile)) {
-        //                 // Use the existing file status
-        //                 $updatedFiles[] = reset($existingFile);
-        //             } else {
-        //                 // Add new file with status 0
-        //                 $updatedFiles[] = [
-        //                     'modID' => $file->moduleID,
-        //                     'fileID' => $file->id,
-        //                     'status' => 0
-        //                 ];
-        //             }
-        //         }
-
-        //         $participant->fileCompletion = json_encode($updatedFiles);
-        //         $participant->save();
-        //     }
-        // }
-
-        //set attribute to file
-        // $arr = json_decode($participant->fileCompletion, true);
+        //set the status for each file
         foreach($arr as $a){
             foreach($files as $file){
                 if($file->id == $a['fileID']){
@@ -294,8 +211,10 @@ class ModuleController extends Controller
 
     public function editModule(Request $request)
     {
+        //find the module by id
         $module = Module::findOrFail($request->input('editmoduleid'));
 
+        //validate the form data
         $validatedData = $request->validate([
             'editmodulename' => 'required',
             'editmoduledesc' => 'required',
@@ -313,13 +232,14 @@ class ModuleController extends Controller
             $module->modulePic = $imageName;
         }
 
+        //save the updated details
         $module->save();
 
         return redirect()->back()->with('success', 'Module edited successfully.');
     }
 
     public function markAsDone(Request $request){
-        // dd($request->all());
+        //find the user and the specific file
         $user = Auth::user();
         $file = File::where('id', $request->fileID)->first();
         $arrayFile = json_decode($user->participants->fileCompletion, true);
@@ -370,6 +290,7 @@ class ModuleController extends Controller
 
     public function unmarkAsDone(Request $request)
     {
+        //find the user and file
         $user = Auth::user();
         $file = File::findOrFail($request->fileID);
         $arrayFile = json_decode($user->participants->fileCompletion, true);
@@ -441,10 +362,13 @@ class ModuleController extends Controller
 
     public function deleteSection(Request $request)
     {
+        //find the section
         DB::table('sections')->where('id', $request->input('sectionid'))->delete();
 
+        //find the related documents
         $documents = Document::where('sectionID', $request->input('sectionid'))->get();
         
+        //delete each document in that section
         foreach ($documents as $document) {
             $files = File::where('documentID', $document->id)->get();
 
@@ -462,6 +386,7 @@ class ModuleController extends Controller
 
     public function viewSection($id)
     {
+        //find the section based on id
         $sections = DB::table('sections')
         ->select('*')
         ->where('id', $id)
@@ -472,12 +397,15 @@ class ModuleController extends Controller
 
     public function editSection(Request $request)
     {
+        //validate the data
         $validator = request()->validate([
             'editsectionname' => 'required|max:255',
         ]);
 
+        //for visibility
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
 
+        //update the new data
         DB::table('sections')
         ->where('id', $request->input('editsectionid')) // Specify the condition for the update
         ->update([
@@ -535,6 +463,7 @@ class ModuleController extends Controller
 
     public function viewContent($id)
     {
+        //find the document and module based on id
         $document = Document::where('id', $id)->first();
         $module = Module::where('id', $document->moduleID)->first();
 
@@ -554,7 +483,6 @@ class ModuleController extends Controller
         $document = Document::where('id', $request->input('editcontentid'))->first();
 
         $document->docTitle = $request->input('editcontentname');
-        // $document->docDesc = $request->input('editcontentdetail');
 
         $contentDetail = $request->input('editcontentdetail');
 
@@ -582,7 +510,6 @@ class ModuleController extends Controller
         }
 
         $document->docDesc = $contentDetail;
-
         $document->isHidden = $hidden;
         $document->save();
 
@@ -591,9 +518,11 @@ class ModuleController extends Controller
 
     public function deleteContent(Request $request)
     {
+        //find document and files
         $document = Document::where('id', $request->input('contentid'))->first();
         $files = File::where('documentID', $document->id)->get();
 
+        //delete each files in that document
         foreach($files as $file){
             $file->delete();
         }
@@ -605,20 +534,23 @@ class ModuleController extends Controller
 
     public function addFile(Request $request)
     {
-        // dd($request->all());
+        //validate the form data
         $validator = request()->validate([
             'filename' => 'required|max:255',
             'filetype' => 'required',
         ]);
 
+        //find the document based on the id
         $document = Document::where('id', $request->input('documentid'))->first();
 
+        //create new File instance
         $file = new File();
         $file->fileName = $request->input('filename');
         $file->fileType = $request->input('filetype');
         $file->documentID = $document->id;
         $file->moduleID = $document->moduleID;
 
+        //check for filetype
         if($request->input('filetype') == 'text'){
             $validator = request()->validate([
                 'filetext' => 'required',
@@ -736,7 +668,6 @@ class ModuleController extends Controller
         $allDocuments = Document::whereIn('moduleID', $allModulesIDs)->get();
         $allDocumentIDs = $allDocuments->pluck('id');
         $allFiles = File::whereIn('documentID', $allDocumentIDs)->get();
-        // dd($allFiles);
     
         foreach ($participants as $participant) {
             if(!isset($participant->fileCompletion)){
@@ -818,7 +749,7 @@ class ModuleController extends Controller
 
     public function viewFile($id)
     {
-        // dd($id);
+        // find the file, document and module based on the id
         $file = File::where('id', $id)->first();
         $document = Document::where('id', $file->documentID)->first();
         $module = Module::where('id', $document->moduleID)->first();
@@ -828,8 +759,10 @@ class ModuleController extends Controller
 
     public function viewFilePDF($id)
     {
-        // dd($id);
+        // find the file based on id
         $file = File::where('id', $id)->first();
+        
+        //get the path for open
         $filePath = public_path('assets/files/' . $file->fileContent);
 
         // Make sure the file exists
@@ -851,8 +784,10 @@ class ModuleController extends Controller
 
     public function viewFileZip($id)
     {
-        // dd($id);    
+        // find the file   
         $file = File::where('id', $id)->first();
+
+        //get the file path for download
         $filePath = public_path('assets/files/' . $file->fileContent);
 
         // Make sure the file exists
@@ -860,6 +795,7 @@ class ModuleController extends Controller
             $headers = ['Content-Type: application/zip'];
             $newName = $file->fileName.'.zip';
 
+            //automatically download the file
             return response()->download($filePath, $newName, $headers);
         } else {
             // Handle file not found
@@ -869,8 +805,10 @@ class ModuleController extends Controller
 
     public function viewFileWord($id)
     {
-        // dd($id);    
+        // find the file   
         $file = File::where('id', $id)->first();
+
+        //get the file path
         $filePath = public_path('assets/files/' . $file->fileContent);
 
         // Make sure the file exists
@@ -878,6 +816,7 @@ class ModuleController extends Controller
             $headers = ['Content-Type: application/msword'];
             $newName = $file->fileName.'.docx';
 
+            //automatically download the file
             return response()->download($filePath, $newName, $headers);
         } else {
             // Handle file not found
@@ -887,9 +826,10 @@ class ModuleController extends Controller
 
     public function deleteFile(Request $request)
     {
-        // dd($request);
         // Find the file by ID
         $file = File::where('id', $request->input('fileid'))->first();
+
+        //update fileCompletion and moduleCompletion
         $this->updateAfterDeleteFile($file);
 
         // Get the file path
@@ -908,19 +848,17 @@ class ModuleController extends Controller
         // Delete the file record from the database
         $file->delete();
 
-        //update fileCompletion and moduleCompletion
-
-
         return redirect()->back()->with('success', 'File deleted successfully.');
     }
 
     public function viewFileforEdit(Request $request)
     {
-        // dd($request);
+        // find the file
         $file = File::where('id', $request->input('fileid'))->first();
         $document = Document::where('id', $file->documentID)->first();
         $module = Module::where('id', $document->moduleID)->first();
         
+        //check for file type
         if($file->fileType == 'text'){
             return view('module.editfiletext', compact('file', 'document', 'module'));
         }else if($file->fileType == 'image'){
@@ -935,12 +873,13 @@ class ModuleController extends Controller
 
     public function editFile(Request $request)
     {
+        //visibility status
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
 
+        //find the file
         $file = File::where('id', $request->input('editfileid'))->first();
         
         $file->fileName = $request->input('editfilename');
-
         $contentDetail = $request->input('editfilecontent');
 
         // Check if the content detail has any anchor tags
@@ -977,6 +916,7 @@ class ModuleController extends Controller
 
     public function editFileImage(Request $request)
     {
+        //visibility status
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
         
         $file = File::where('id', $request->input('editfileid'))->first();
@@ -1020,6 +960,7 @@ class ModuleController extends Controller
 
     public function editFileURL(Request $request)
     {
+        //visibility status
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
         
         $file = File::where('id', $request->input('editfileid'))->first();
@@ -1054,6 +995,7 @@ class ModuleController extends Controller
 
     public function editFileAllType(Request $request)
     {
+        //visibility status
         $hidden = $request->has('isHidden') && $request->filled('isHidden');
         
         $file = File::where('id', $request->input('editfileid'))->first();
@@ -1121,7 +1063,7 @@ class ModuleController extends Controller
 
     public function viewSubmission($id)
     {
-        // dd($id);
+        //find submission
         $submission = Submission::where('id', $id)->first();
         $user = User::where('id', Auth::user()->id)->first();
         $submissionFile = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
@@ -1132,6 +1074,7 @@ class ModuleController extends Controller
         $dueDateTime = Carbon::createFromFormat('Y-m-d h:i A', $submission->duedate . ' ' . $formattedTime, 'Asia/Kuala_Lumpur');
         $currentDateTime = Carbon::now()->timezone('Asia/Kuala_Lumpur');
 
+        //get time left before the due date
         $timeLeft = $currentDateTime->diff($dueDateTime);
         $daysLeft = $timeLeft->d;
         $hoursLeft = $timeLeft->h;
@@ -1140,13 +1083,13 @@ class ModuleController extends Controller
 
         $timeLeftString = $daysLeft . ' days, ' . $hoursLeft . ' hours, ' . $minutesLeft . ' minutes, ' . $secondsLeft . ' seconds';
 
+        //get the flag for the due date 
         if ($currentDateTime->greaterThan($dueDateTime)) {
             $timeSign = 'negative';
         } elseif ($currentDateTime->lessThan($dueDateTime)) {
             $timeSign = 'positive';
         }
 
-        // dd($timeLeftString);
         $submission->setAttribute('timeLeft', $timeLeftString);
         $submission->setAttribute('timeSign', $timeSign);
 
@@ -1170,7 +1113,7 @@ class ModuleController extends Controller
 
     public function addSubmission(Request $request)
     {
-        // dd($id);
+        // find submission
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         
         return view('submission.addsubmission', compact('submission'));
@@ -1178,13 +1121,11 @@ class ModuleController extends Controller
 
     public function submitFile(Request $request)
     {
-        // dd($request->all());
         $user = User::where('id', Auth::user()->id)->first();
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         $errorMessage = 'Invalid file type. Please select a valid file type.';
         $successMessage = 'File has been submitted succesfully.';
-        // $submissionFile = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
-        // dd($submissionFile);
+
         
         //calculate time left
         $carbonTime = Carbon::createFromFormat('H:i:s', $submission->duetime);
@@ -1192,6 +1133,7 @@ class ModuleController extends Controller
         $dueDateTime = Carbon::createFromFormat('Y-m-d h:i A', $submission->duedate . ' ' . $formattedTime, 'Asia/Kuala_Lumpur');
         $currentDateTime = Carbon::now()->timezone('Asia/Kuala_Lumpur');
 
+        //calculate the time left before due date
         $timeLeft = $currentDateTime->diff($dueDateTime);
         $daysLeft = $timeLeft->d;
         $hoursLeft = $timeLeft->h;
@@ -1200,28 +1142,28 @@ class ModuleController extends Controller
 
         $timeLeftString = $daysLeft . ' days, ' . $hoursLeft . ' hours, ' . $minutesLeft . ' minutes, ' . $secondsLeft . ' seconds';
 
+        //set the flag for the due date
         if ($currentDateTime->greaterThan($dueDateTime)) {
             $timeSign = 'negative';
         } elseif ($currentDateTime->lessThan($dueDateTime)) {
             $timeSign = 'positive';
         }
 
-        // dd($timeLeftString);
         $submission->setAttribute('timeLeft', $timeLeftString);
         $submission->setAttribute('timeSign', $timeSign);
 
+        //process the file
         if ($request->hasFile('filesubmit')) {
             $file = $request->file('filesubmit');
             $extension = $file->getClientOriginalExtension();
 
             if($submission->submissionType != 'allfile'){
                 if($submission->submissionType != $extension){
-                    // return view('module.addsubmission', compact('submission', 'document', 'module', 'errorMessage'));
-                    // return redirect()->route('submission.addsubmission', compact('submission'))->with('error', 'Wrong File Extension');
                     return view('submission.addsubmission', compact('submission', 'errorMessage'));
                 } 
             }
             
+            //save the file
             $submitFile = new SubmissionFile();
             $submitFile->submissionID = $submission->id;
             $submitFile->userID = $user->id;
@@ -1239,17 +1181,15 @@ class ModuleController extends Controller
             $submitFile->save();
             $submissionFile = $submitFile;
             
-            // return view('module.viewsubmission', compact('submission', 'document', 'module', 'submissionFile', 'successMessage'));
             return redirect()->route('viewSubmission', ['id' => $submission->id])->with('success', $successMessage);
         } else {
-            // return view('module.addsubmission', compact('submission', 'document', 'module', 'errorMessage'));
             return redirect()->route('viewSubmission', ['id' => $submission->id])->with('error', $errorMessage);
         }
     }
 
     public function editSubmission(Request $request)
     {
-        // dd($id);
+        // get the submission detail
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         $user = User::where('id', Auth::user()->id)->first();
         $submissionFile = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
@@ -1259,7 +1199,7 @@ class ModuleController extends Controller
 
     public function viewSubmissionDetail(Request $request)
     {
-        // dd($request);
+        // get the submission detail
         $submission = Submission::where('id', $request->input('submissionid'))->first();
         
         return view('submission.viewsubmissiondetail', compact('submission'));
@@ -1267,7 +1207,6 @@ class ModuleController extends Controller
 
     public function editSubmissionDetail(Request $request)
     {
-        // dd($request);
         // Validate the submitted data
         $validatedData = $request->validate([
             'editsubname' => 'required|max:255',
@@ -1294,7 +1233,7 @@ class ModuleController extends Controller
 
     public function deleteSubmissionDetail(Request $request)
     {
-        // dd($request);
+        // find the submission
         $submission = Submission::where('id', $request->input('submissionid'))->first();
         $documentback = Document::where('id', $submission->documentID)->first();
         $submittedFiles = SubmissionFile::where('submissionID', $submission->id)->get();
@@ -1320,6 +1259,7 @@ class ModuleController extends Controller
 
     public function editSubmittedFile(Request $request)
     {
+        //get user and submission detail
         $user = User::where('id', Auth::user()->id)->first();
         $submission = Submission::where('id', $request->input('submissionID'))->first();
         $errorMessage = 'Invalid file type. Please select a valid file type.';
@@ -1332,6 +1272,7 @@ class ModuleController extends Controller
         $dueDateTime = Carbon::createFromFormat('Y-m-d h:i A', $submission->duedate . ' ' . $formattedTime, 'Asia/Kuala_Lumpur');
         $currentDateTime = Carbon::now()->timezone('Asia/Kuala_Lumpur');
 
+        //get the time left before the due date
         $timeLeft = $currentDateTime->diff($dueDateTime);
         $daysLeft = $timeLeft->d;
         $hoursLeft = $timeLeft->h;
@@ -1340,16 +1281,17 @@ class ModuleController extends Controller
 
         $timeLeftString = $daysLeft . ' days, ' . $hoursLeft . ' hours, ' . $minutesLeft . ' minutes, ' . $secondsLeft . ' seconds';
 
+        //set the flag for the due date
         if ($currentDateTime->greaterThan($dueDateTime)) {
             $timeSign = 'negative';
         } elseif ($currentDateTime->lessThan($dueDateTime)) {
             $timeSign = 'positive';
         }
 
-        // dd($timeLeftString);
         $submission->setAttribute('timeLeft', $timeLeftString);
         $submission->setAttribute('timeSign', $timeSign);
 
+        //process the file
         if ($request->hasFile('filesubmit')) {
             $file = $request->file('filesubmit');
             $extension = $file->getClientOriginalExtension();
@@ -1381,21 +1323,21 @@ class ModuleController extends Controller
                 }
             }
 
+            //save the new submission
             $file->move('assets/submissions/', $fileName);
             $submitFile->submittedFileContent = $fileName;
             $submitFile->save();
             $submissionFile = $submitFile;
             
             return redirect()->route('viewSubmission', ['id' => $submission->id])->with('success', $successMessage);
-            // return view('module.viewsubmission', compact('submission', 'document', 'module', 'submissionFile', 'successMessage'));
         } else {
-            // return view('submission.addsubmission', compact('submission', 'errorMessage'));
             return redirect()->route('viewSubmission', ['id' => $submission->id])->with('error', $errorMessage);
         }
     }
 
     public function removeSubmission(Request $request)
     {
+        //find submitted file
         $submissionFile = SubmissionFile::findOrFail($request->submittedFileID);
 
         // Delete the submitted file from the file system
@@ -1415,7 +1357,7 @@ class ModuleController extends Controller
 
     public function manageSubmission($id)
     {
-        // dd($id);
+        // get all submissions
         $submission = Submission::where('id', $id)->first();
         $classroom = Classroom::where('id', $submission->classID)->first();
         $participants = Participant::where('participant_classcode', $classroom->classCode)->get();
@@ -1426,6 +1368,7 @@ class ModuleController extends Controller
         foreach($participants as $participant){
             $user = User::where('id', $participant->user_id)->first();
             
+            //check for group/individual submission
             if(SubmissionFile::where('userID', $user->id)->first()){
                 $file = SubmissionFile::where('userID', $user->id)->where('submissionID', $submission->id)->first();
                 // Format the time
@@ -1453,6 +1396,7 @@ class ModuleController extends Controller
         $dueDateTime = Carbon::createFromFormat('Y-m-d h:i A', $submission->duedate . ' ' . $formattedTime, 'Asia/Kuala_Lumpur');
         $currentDateTime = Carbon::now()->timezone('Asia/Kuala_Lumpur');
 
+        //calculate the time left before the due date
         $timeLeft = $currentDateTime->diff($dueDateTime);
         $daysLeft = $timeLeft->d;
         $hoursLeft = $timeLeft->h;
@@ -1461,6 +1405,7 @@ class ModuleController extends Controller
 
         $timeLeftString = $daysLeft . ' days, ' . $hoursLeft . ' hours, ' . $minutesLeft . ' minutes, ' . $secondsLeft . ' seconds';
 
+        //set the flag for the due date
         if ($currentDateTime->greaterThan($dueDateTime)) {
             $timeSign = 'negative';
         } elseif ($currentDateTime->lessThan($dueDateTime)) {

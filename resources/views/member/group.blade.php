@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
+  <!--display error message -->
     <div class="alert alert-danger">
       Failed to create new group:
         <ul>
@@ -35,6 +35,7 @@
               <div class="col-lg-6 mt-2">
                 <div class="row">
                   <div class="col-md-6 d-flex justify-content-end align-items-center">
+                    <!-- dropdown menu for the classroom -->
                     @if(!($classrooms->isEmpty()))
                         <button  type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#creategroup">
                             <i class="bi bi-plus-circle"></i><span>&nbspGroup</span>
@@ -57,8 +58,9 @@
                 </div>
               </div>
             </div>
-             
-             <div class="table-responsive">
+            
+            <!-- display the list of the groups for the chosen classroom -->
+            <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>
                   <tr>
@@ -82,6 +84,7 @@
                     @php
                       $memberArray = json_decode($group->member, true);   
                     @endphp
+                    <!-- check for group member's count -->
                     @if (empty($memberArray))
                       <td>0</td>
                     @else
@@ -89,6 +92,7 @@
                     @endif
                     <td>{{ $group->created_at->format('d F Y, H:i A') }}</td>
                     <td>
+                      <!-- delete group form -->
                         <form action="{{ route('deleteGroup') }}" method="POST" id="removeForm" onsubmit="return confirm('Are you sure you want to delete this group?');">
                             @csrf
                             <input type="hidden" name="groupID" id="groupID" value="{{ $group->id }}">
@@ -143,6 +147,7 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    //use ajax to display the group list based on chosen classroom without reloading the page
     $(document).ready(function () {
         $('#classDropdown').on('change', function () {
             var classID = $(this).val();
@@ -154,7 +159,6 @@
                     classid: classID
                 },
                 success: function (data) {
-                    // console.log(data);
                     // handle success response
                     var tableBody = $('#tableall tbody');
 
@@ -187,10 +191,10 @@
                 },
                 error: function (xhr, status, error) {
                     // handle error response
+                    console.log(error);
                 }
             });
         });
     });
   </script>
-
 @endsection

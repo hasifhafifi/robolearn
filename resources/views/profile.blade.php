@@ -1,6 +1,7 @@
 @extends ('layouts.app')
 @section('content')
 @if ($errors->any())
+  <!-- display error message -->
     <div class="alert alert-danger">
       Failed to update profile:
         <ul>
@@ -24,13 +25,12 @@
 <section class="section profile">
     <div class="row">
       <div class="col-xl-4">
-
         <div class="card">
           <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
-
+            <!-- display profile picture -->
             <img src="{{ asset('assets/img/profilepics/' . $userDetails->profilepic) }}" alt="Profile" class="rounded-circle">
             <h2>{{ $userDetails->username }}</h2>
-            
+            <!-- check for usertyoe -->
             @if($userDetails->usertype == 1)
               <h3>Participant</h3>
             @elseif($userDetails->usertype == 2)
@@ -40,16 +40,14 @@
             @endif
           </div>
         </div>
-
       </div>
 
       <div class="col-xl-8">
-
         <div class="card">
           <div class="card-body pt-3">
             <!-- Bordered Tabs -->
             <ul class="nav nav-tabs nav-tabs-bordered">
-
+              <!-- display tabs for user to choose from -->
               <li class="nav-item">
                 <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
               </li>
@@ -61,7 +59,7 @@
               <li class="nav-item">
                 <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
               </li>
-
+              <!-- if usertype is admin, cannot delete account -->
               @if ($userDetails->usertype == 1 || $userDetails->usertype == 2)
                   <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-delete-account">Delete Account</button>
@@ -69,10 +67,9 @@
               @endif
               
             </ul>
+            <!-- display profile overview -->
             <div class="tab-content pt-2">
-
               <div class="tab-pane fade show active profile-overview" id="profile-overview">
-
                 <h5 class="card-title">Profile Details</h5>
 
                 <div class="row">
@@ -114,9 +111,7 @@
                   <div class="col-lg-9 col-md-8">{{ $userDetails->members->matricNum }}</div>
                 </div>
                 @endif
-
               </div>
-
               <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                 <!-- Profile Edit Form -->
@@ -262,6 +257,7 @@
     </div>
   </section>
   <script>
+    //to preview the uploaded profile picture
     function previewFile(event) {
       var preview = document.getElementById('preview-image');
       var file = event.target.files[0];

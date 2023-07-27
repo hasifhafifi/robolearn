@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
+  <!--display error message -->
     <div class="alert alert-danger">
       Failed to add participant to group:
         <ul>
@@ -27,7 +27,6 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
             <div class="row">
@@ -36,14 +35,16 @@
               </div>
               <div class="col-lg-6 mt-3">
                 <div class="col-md-12 d-flex justify-content-end">
+                  <!--add member button -->
                   <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addmember">
                       <i class="bi bi-plus-circle"></i><span>&nbspAdd Member</span>
                    </button>
                 </div>
               </div>
             </div>
-    
-             <div class="table-responsive">
+            
+            <!--display group member -->
+            <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>
                   <tr>
@@ -56,6 +57,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!--check if group member exist -->
                   @if(empty($group->users))
                   <tr>
                     <td colspan="100" class="text-center">No Data</td>
@@ -69,6 +71,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phonenum }}</td>
                     <td>
+                      <!--form to remove participant from that group -->
                       <form action="{{ route('removeparticipantfromgroup') }}" method="POST" id="removeForm" onsubmit="return confirm('Are you sure you want to remove this participant from this group?');">
                         @csrf
                         <input type="hidden" name="userID" id="userID" value="{{ $user->id }}">
@@ -102,6 +105,7 @@
                   <div class="form-group mb-3">
                     <label for="participant">Participant Name:</label>
                     <select name="participant" id="participant" class="form-select">
+                      <!--list the classroom participant in the dropdown if exist -->
                         @if(empty($participantArray))
                         <option value="">No Participant</option>
                         @else
@@ -112,11 +116,6 @@
                         @endif
                     </select>
                   </div>
-                  {{-- <div class="form-group mb-3" id="dynamic_field"></div>
-                  <div class="form-group mb-3">
-                    <button type="button" class="btn btn-primary" name="add" id="add"><i class="bi bi-plus"></i> </button>
-                    <button type="button" class="btn btn-danger" name="remove" id="remove"><i class="bi bi-dash"></i> </button>
-                  </div> --}}
               </div>
               <input type="hidden" id="groupID" name="groupID" value="{{ $group->id }}">
               <div class="modal-footer">

@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if(isset($successMessage))
+    <!-- display success message -->
     <div class="alert alert-success">{{ $successMessage }}</div>
 @endif
 
@@ -19,7 +19,7 @@
         <li class="breadcrumb-item active">View Report</li>
       </ol>
     </nav>
-  </div><!-- End Page Title -->
+</div><!-- End Page Title -->
 
   <section class="section">
     <div class="row">
@@ -33,6 +33,7 @@
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                       @if(isset($user))
+                      <!-- display button to edit -->
                       <div class="">
                         <a href="{{ route('editReport', ['id' => $report->id]) }}">
                         <button class="btn btn-primary me-2">Edit</button>
@@ -43,6 +44,7 @@
                         <button class="btn btn-primary me-2">Edit</button>
                         </a>
                       @endif
+                      <!-- display button to delete -->
                       <div class="">
                         <form action="{{ route('deleteReport') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete report: {{ $report->name }}?');">
                           @csrf
@@ -60,6 +62,7 @@
                 </div>
             </div>
              
+            <!-- list the report content -->
              <table class="table table-striped table-bordered table-hover table-responsive">
                 <tr>
                     @if(isset($user))
@@ -74,6 +77,7 @@
                 <tr>
                   <th>Group Members</th>
                   <td>
+                    <!-- list the group members -->
                     @foreach($group->groupMembers as $count=>$member)
                     {{$count+1}}. {{$member->username}} <br>
                     @endforeach

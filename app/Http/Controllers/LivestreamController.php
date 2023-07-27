@@ -57,6 +57,7 @@ class LivestreamController extends Controller
         //ranking
         $reports = Report::where('classID', $livestream->classroomID)->orderBy('totalMarks', 'desc')->get();
 
+        //get report based on user or group
         foreach($reports as $report){
             if(isset($report->userID)){
                 $userDetail = User::where('id', $report->userID)->first();
@@ -79,6 +80,7 @@ class LivestreamController extends Controller
         //ranking
         $reports = Report::where('classID', $request->input('classroomId'))->orderBy('totalMarks', 'desc')->take(10)->get();
 
+        //get report based on user or group
         foreach($reports as $report){
             if(isset($report->userID)){
                 $userDetail = User::where('id', $report->userID)->first();
@@ -118,7 +120,6 @@ class LivestreamController extends Controller
         $streamDesc = $validatedData['streamdesc'];
         $streamDate = $validatedData['streamdate'];
         $streamTime = $validatedData['streamtime'];
-        // $ytStreamId = $validatedData['ytstreamid'];
         $classroomId = $validatedData['classSelect'];
 
         $videoLink = $request->input('ytstreamid');
@@ -153,6 +154,7 @@ class LivestreamController extends Controller
 
     public function viewLivestreamforEdit($id)
     {
+        //find the livestream based on id
         $livestream = Livestream::findOrFail($id);
 
         return response()->json($livestream);
@@ -224,8 +226,6 @@ class LivestreamController extends Controller
 
         if(!($livestreams->isEmpty())){
             foreach($livestreams as $livestream){
-                // $classname = Classroom::where('id', $livestream->classroomID)->first();
-                // $livestream->setAttribute('classname', $classname->className);
 
                 // Convert date string to Carbon object
                 $date = Carbon::parse($livestream->streamDate);

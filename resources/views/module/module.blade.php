@@ -1,8 +1,8 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
     <div class="alert alert-danger">
+      <!-- display error message -->
       Failed to add add new module:
         <ul>
             @foreach ($errors->all() as $error)
@@ -36,6 +36,7 @@
                   </div>
                   <div class="col-lg-6 mt-3">
                     <div class="col-md-12 d-flex justify-content-end mb-2">
+                      <!-- check if admin/member display add module button -->
                       @if(Auth::user()->usertype != '1')
                         <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModuleModal">
                            <i class="bi bi-plus-circle"></i><span>&nbspAdd Module</span>
@@ -44,8 +45,8 @@
                     </div>
                   </div>
                 </div>
-                
 
+                <!-- list all modules -->
                 <div class="row">
                 @foreach($modules as $module)
                     <div class="col-md-3">
@@ -64,6 +65,7 @@
                               @endif
                             </h5>
                             <p class="card-text">{{ $module->moduleDesc }}</p>
+                            <!-- if participant, display learning percentage -->
                             @if(Auth::user()->usertype == '1')
                             <div class="card-footer text-white text-center">
                               <span class="percentage-badge badge {{ $module->percentage == 100 ? 'bg-success' : 'bg-primary' }}">
@@ -72,6 +74,7 @@
                             </div>
                             @endif
                           </a>
+                          <!-- if admin/member, display edit and delete button -->
                             @if(Auth::user()->usertype != '1')
                               <div class="d-flex justify-content-between align-items-center">
                                 <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModuleModal" onclick="getModule('{{ $module->id }}')">
@@ -116,11 +119,6 @@
                     <label for="moduledesc">Module Description:</label>
                     <input type="text" class="form-control" id="moduledesc" name="moduledesc" value="{{ old('moduledesc') }}">
                   </div>
-  
-                  {{-- <div class="form-group mb-3">
-                    <label for="modulepic">Module Picture:</label>
-                    <input id="modulepic" type="file" class="form-control" name="modulepic" value="{{ old('modulepic') }}">
-                  </div> --}}
 
                   <input name="classSelect" id="classSelect" class="form-select" type="hidden" value="{{$id}}">
               </div>
@@ -160,12 +158,6 @@
                     <input type="text" class="form-control" id="editmoduledesc" name="editmoduledesc" value="{{ old('editmoduledesc') }}">
                   </div>
 
-                  {{-- <div class="form-group mb-3">
-                    <img class="card-img-top" id="moduleImage" name="moduleImage" alt="Card image cap"><br> 
-                    <label for="editmodulepic">Module Picture:</label>
-                    <input id="editmodulepic" type="file" class="form-control" name="editmodulepic" value="{{ old('editmodulepic') }}">
-                  </div> --}}
-
                   <input name="editmoduleid" id="editmoduleid" class="form-select" type="hidden">
                   <input name="editclassSelect" id="editclassSelect" class="form-select" type="hidden" value="{{$id}}">
               </div>
@@ -182,6 +174,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+      //to get the placeholder for the edit modal form
         function getModule(id) {
       $.ajax({
         url: '/module/edit/' + id,

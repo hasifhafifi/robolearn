@@ -22,6 +22,7 @@
              <h5 class="card-title">Edit Content</h5>
              <form method="POST" action="{{ route('editContent') }}" enctype="multipart/form-data">
               @csrf
+              <!-- name -->
               <div class="form-group mb-3">
                 <label for="editcontentname">Content Title:</label>
                 <input type="text" class="form-control @error('editcontentname') is-invalid @enderror" id="editcontentname" name="editcontentname" value="{{ $document->docTitle }}">
@@ -31,6 +32,7 @@
                     </span>
                 @enderror
               </div>
+              <!-- description -->
               <div class="form-group mb-3">
                 <label for="editcontentdetail">Content Description:</label>
                 <textarea name="editcontentdetail" id="editcontentdetail" class="form-control @error('editcontentdetail') is-invalid @enderror" style="display:none">{{ $document->docDesc }}</textarea>
@@ -43,6 +45,7 @@
                     </span>
                 @enderror
               </div>
+              <!-- visibility -->
               <div class="form-group mb-3">
                 <label for="isHidden">Visibility:</label><br>
                 <input type="checkbox" id="isHidden" name="isHidden" {{ $document->isHidden ? 'checked' : '' }}>Hide Section

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 @if(isset($successMessage))
     <div class="alert alert-success">{{ $successMessage }}</div>
@@ -29,6 +28,7 @@
                 </div>
             </div>
              
+            <!-- list the ranking of the group/participant -->
              <table class="table table-striped table-bordered table-hover table-responsive">
                 <thead>
                     <th>No</th>
@@ -39,6 +39,7 @@
                 </thead>
                 <tbody>
                     @if(!$reports->isEmpty())
+                    <!-- list all reports -->
                     @foreach($reports as $index=>$report)
                     <tr>
                         <td>{{ $index+1 }}</td>

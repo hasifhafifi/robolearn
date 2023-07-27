@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
     <h1>Edit Submission</h1>
@@ -19,6 +18,7 @@
         <div class="card">
           <div class="card-body">
              <h5 class="card-title">Edit Submission Detail</h5>
+             <!-- form for editing the submission detail -->
              <form method="POST" action="{{ route('editSubmissionDetail') }}" enctype="multipart/form-data">
               @csrf
               <div class="form-group mb-3">
@@ -38,6 +38,7 @@
                 </div>
               </div>
               <div class="form-group mb-3">
+                <!-- dropdown for file type of submission -->
                 <label for="submissiontype">File Type:</label>
                 <select name="submissiontype" id="submissiontype" class="form-select">
                   <option value="allfile" {{ $submission->submissionType== 'allfile' ? 'selected' : '' }}>All file</option>
@@ -74,6 +75,7 @@
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <!-- Initialize Quill editor -->
   <script>
+    //quill editor for submission description
     $(document).ready(function(){
       var quill = new Quill('#editsubdesc', {
       theme: 'snow'

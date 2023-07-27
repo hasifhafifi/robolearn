@@ -192,8 +192,6 @@
     {
         background: var(--bs-light);
     }
-
-
     </style>
 </head>
 <body>
@@ -203,7 +201,6 @@
         <i class="bi bi-list toggle-sidebar-btn"></i>
         <a href="{{ route('home') }}" class="logo d-flex align-items-center">
             <img src="{{ asset('assets/img/robolearn-crop.png') }}" alt="" height="50%" width="60%">
-            {{-- <span class="d-none d-lg-block">NiceAdmin</span> --}}
         </a>
         </div><!-- End Logo --> 
 
@@ -443,7 +440,7 @@
             el: '.pickr',
             theme: 'classic',
             default: input.value || null,
-
+            //choosing the theme color for the forum
             swatches: [
                 '{{ config('forum.web.default_category_color') }}',
                 '#f44336',

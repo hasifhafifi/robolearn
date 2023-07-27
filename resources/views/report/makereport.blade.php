@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
     <h1>Create Report</h1>
@@ -23,6 +22,7 @@
         <div class="card">
           <div class="card-body">
              <h5 class="card-title">Add Report</h5>
+             <!-- form for creating a new report -->
              <form method="POST" action="{{ route('createReport') }}" enctype="multipart/form-data">
               @csrf
               @if(isset($user))
@@ -105,6 +105,7 @@
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <!-- Initialize Quill editor -->
   <script>
+    //quill textbox for comment description
     $(document).ready(function(){
       var quill = new Quill('#commentdesc', {
       theme: 'snow'

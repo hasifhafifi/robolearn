@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if(isset($successMessage))
+    <!-- display success message -->
     <div class="alert alert-success">{{ $successMessage }}</div>
 @endif
 
@@ -22,6 +22,7 @@
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body">
+            <!-- display submission detail -->
              <h5 class="card-title">Manage Submission</h5>
              <h6><b>Submission Detail:</b></h6>
              <table class="table table-striped table-bordered table-hover table-responsive">
@@ -36,6 +37,7 @@
                 <tr>
                     <th>Submission Type</th>
                     <td>
+                        <!-- check for type of file submission -->
                         @if($submission->submissionType == 'allfile')
                         All File
                         @else
@@ -45,6 +47,7 @@
                 </tr>
                 <tr>
                     <th>Submission Due</th>
+                    <!-- check if current time > due date -->
                     @if($submission->timeSign == 'negative')
                     <td class="table-danger">
                         <strong>Date and Time:</strong> {{ $submission->formattedDate }} {{ $submission->formattedTime }}
@@ -60,6 +63,7 @@
                     @endif
                 </tr>
              </table>
+             <!-- display all the participant and their submission status/file -->
              <div class="table-responsive">
              <table class="table table-bordered table-striped table-hover datatable">
                 <thead>
@@ -110,6 +114,7 @@
                 </tbody>
              </table>
              <div class="d-flex justify-content-center align-items-center">
+                <!-- button for the member/admin to download all submission -->
                 <form action="{{ route('getAllSubmission') }}" method="POST">
                     @csrf
                     <input type="hidden" name="submissionID" id="submissionID" value="{{$submission->id}}">

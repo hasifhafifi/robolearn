@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
     <h1>Tournament Report</h1>
@@ -15,11 +14,10 @@
   <section class="section">
     <div class="row">
       <div class="col-lg-12">
-
         <div class="card">
           <div class="card-body">
              <h5 class="card-title">Participant</h5>
-            
+             <!-- list all the participants in that class -->
              <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>
@@ -39,6 +37,7 @@
                     <td colspan="100" class="text-center">No Data</td>
                   </tr>
                   @else
+                  <!-- loop all the participants -->
                   @foreach($users as $index => $user)
                   <tr>
                     <td>{{$index+1}}</td>
@@ -47,6 +46,7 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phonenum }}</td>
                     <td>{{ $user->groupName }}</td>
+                    <!-- check if report exist -->
                     @if(isset($user->reportID))
                     <td>
                         <a href="{{ route('viewReport', ['id' => $user->reportID]) }}">
@@ -56,6 +56,7 @@
                         </a>
                     </td>
                     @else
+                    <!-- display add report button if report doesnt exist -->
                     <td>
                         <a href="{{ route('reportForm', ['id' => $user->id]) }}">
                             <button type="submit" class="btn btn-primary">
@@ -75,5 +76,4 @@
       </div>
     </div>
   </section>
-
 @endsection

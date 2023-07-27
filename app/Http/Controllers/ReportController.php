@@ -43,6 +43,7 @@ class ReportController extends Controller
         $participants = Participant::where('participant_classcode', $class->classCode)->get();
         $arrPercentage = [];
 
+        //get status of completion for each participant
         foreach($participants as $participant){
             $user = User::where('id', $participant->user_id)->first();
             $moduleCompletion = $this->checkIfModuleCompletionExist($participant);
@@ -55,11 +56,13 @@ class ReportController extends Controller
 
     public function viewParticipantModule($id)
     {
+        //find participant based on id
         $participant = Participant::where('id', $id)->first();
         $class = Classroom::where('classCode', $participant->participant_classcode)->first();
         $modules = Module::where('classroomID', $class->id)->get();
         $moduleIDs = $modules->pluck('id');
         $files = File::whereIn('moduleID', $moduleIDs)->get();
+        //get the file completion status and module completion status
         $fileCompletion = $this->checkIfFileCompletionExist($participant);
         $moduleCompletion = $this->checkIfModuleCompletionExist($participant);
         $participant->setAttribute('fileCompletionArr', $fileCompletion);
@@ -85,34 +88,15 @@ class ReportController extends Controller
         return view('report.activeclasstournamentreport', compact('classrooms'));
     }
 
-    // public function viewTournamentbyClass($id)
-    // {
-    //     //get list of active classrooms
-    //     $class = Classroom::where('id', $id)->first();
-    //     $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
-    //     $participants = Participant::where('participant_classcode', $class->classCode)->get();
-    //     $groups = Group::where('classroom_id', $class->id)->get();
-
-    //     foreach($participants as $participant){
-    //         if(isset($participant->participant_groupID)){
-    //             $group = Group::where('id', $participant->participant_groupID)->first();
-    //             $participant->setAttribute('groupName', $group->name);
-    //         }else{
-    //             $participant->setAttribute('groupName', 'Not in a group');
-    //         }
-    //     }
-
-    //     // dd($reports);
-        
-    //     return view('report.learningprogress', compact('modules', 'participants', 'class'));
-    // }
-
     public function viewTournamentbyClass($id)
     {
         //get list of active classrooms
         $class = Classroom::where('id', $id)->first();
+
+        //view report in descending order
         $reports = Report::where('classID', $class->id)->orderBy('totalMarks', 'desc')->get();
 
+        // set attribute for each report
         foreach($reports as $report){
             if(isset($report->userID)){
                 $user = User::where('id', $report->userID)->first();
@@ -132,12 +116,14 @@ class ReportController extends Controller
 
     public function viewTournamentbyClassParticipant($id)
     {
+        //find classroom based on id
         $class = Classroom::where('id', $id)->first();
         $participants = Participant::where('participant_classcode', $class->classCode)->get();
         $participantIDs = $participants->pluck('user_id');
         $users = User::whereIn('id', $participantIDs)->get();
 
         foreach($users as $user){
+            //find the group for each participants
             if(isset($user->participants->participant_groupID)){
                 $group = Group::where('id', $user->participants->participant_groupID)->first();
                 $user->setAttribute('groupName', $group->name);
@@ -157,6 +143,7 @@ class ReportController extends Controller
 
     public function viewTournamentbyClassGroup($id)
     {
+        //find class by id
         $class = Classroom::where('id', $id)->first();
         $groups = Group::where('classroom_id', $class->id)->get();
 
@@ -179,6 +166,7 @@ class ReportController extends Controller
 
     public function reportForm($id)
     {
+        //create report for participant
         $user = User::where('id', $id)->first();
         $class = Classroom::where('classCode', $user->participants->participant_classcode)->first();
         return view('report.makereport', compact('user', 'class'));
@@ -186,6 +174,7 @@ class ReportController extends Controller
 
     public function reportFormGroup($id)
     {
+        //create report for group
         $group = Group::where('id', $id)->first();
         $class = Classroom::where('id', $group->classroom_id)->first();
         $participants = Participant::where('participant_groupID', $group->id)->get();
@@ -198,6 +187,7 @@ class ReportController extends Controller
 
     public function createReport(Request $request)
     {
+        //validate the form data
         $validator = Validator::make(request()->all(), [
             'reportname' => 'required|max:255',
             'tourname' => 'required|max:255',
@@ -213,7 +203,6 @@ class ReportController extends Controller
                 ->withInput();
         }
 
-        // $user = User::where('id', $request->input('userID'))->first();
         $class = Classroom::where('id', $request->input('classID'))->first();
         $report = new Report();
     
@@ -246,6 +235,7 @@ class ReportController extends Controller
 
     public function viewReport($id)
     {
+        //view the report details for participant
         $report = Report::where('id', $id)->first();
         $user = User::where('id', $report->userID)->first();
         $class = Classroom::where('classCode', $user->participants->participant_classcode)->first();
@@ -254,6 +244,7 @@ class ReportController extends Controller
 
     public function viewReportGroup($id)
     {
+        //view report details for group report
         $report = Report::where('id', $id)->first();
         $group = Group::where('id', $report->groupID)->first();
         $class = Classroom::where('id', $group->classroom_id)->first();
@@ -267,6 +258,7 @@ class ReportController extends Controller
 
     public function editReport($id)
     {
+        //redirect to edit report page for individual report
         $report = Report::where('id', $id)->first();
         $user = User::where('id', $report->userID)->first();
         $class = Classroom::where('classCode', $user->participants->participant_classcode)->first();
@@ -275,6 +267,7 @@ class ReportController extends Controller
 
     public function editReportGroup($id)
     {
+        //redirect to edit report page for group report
         $report = Report::where('id', $id)->first();
         $group = Group::where('id', $report->groupID)->first();
         $class = Classroom::where('id', $group->classroom_id)->first();
@@ -287,6 +280,7 @@ class ReportController extends Controller
 
     public function updateReport(Request $request)
     {
+        //validate the form data
         $validator = Validator::make(request()->all(), [
             'reportname' => 'required|max:255',
             'tourname' => 'required|max:255',
@@ -326,6 +320,7 @@ class ReportController extends Controller
 
     public function deleteReport(Request $request)
     {
+        //find the report based on id
         $report = Report::where('id', $request->input('reportID'))->first();
         $report->delete();
 
@@ -345,7 +340,8 @@ class ReportController extends Controller
 
         //get report for group
         $group = Group::where('id', $user->participants->participant_groupID)->first();
-        // $reportGroup = new Report();
+
+        //if report for group exist, assign the group members to group
         if(isset($group) && Report::where('groupID', $group->id)->first()){
             $reportGroup = Report::where('groupID', $group->id)->first();
             $participants = Participant::where('participant_groupID', $group->id)->get();
@@ -379,16 +375,5 @@ class ReportController extends Controller
         }else{
             return view('report.viewreportparticipant', compact('user', 'group', 'reportUser', 'reports', 'class'));
         }
-    }
-
-    public function createReportTemplate()
-    {
-        return view('report.createreporttemplate');
-    }
-
-    public function saveReportTemplate(Request $request)
-    {
-        dd($request->all());
-        return view('report.createreporttemplate');
     }
 }

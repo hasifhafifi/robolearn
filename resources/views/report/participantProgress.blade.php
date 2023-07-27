@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
     <h1>Participant Progress</h1>
@@ -19,12 +18,14 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{$participant->username}}</h5>
+            <!-- loop the modules with its files -->
             @foreach($modules as $module)
               <div class="card shadow lg p-3 mb-5 bg-white rounded">
                 <div class="card-body">
                 <h5 class="card-title">
                     {{$module->moduleName}}
                     @foreach($participant->moduleCompletionArr as $moduleCompletion)
+                    <!-- display the module completion percentage-->
                     @if($moduleCompletion['modID'] == $module->id)
                     ({{$moduleCompletion['percentage']}}%)
                     @endif
@@ -43,6 +44,7 @@
                 @php
                  $index = 0;   
                 @endphp
+                <!-- loop the files in that module -->
                 @foreach($files as $file)
                     @if($file->moduleID == $module->id)
                         <tr>
@@ -82,5 +84,4 @@
       </div>
     </div>
   </section>
-  
 @endsection

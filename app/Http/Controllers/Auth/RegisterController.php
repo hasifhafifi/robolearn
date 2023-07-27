@@ -51,6 +51,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // validate the user data first
         return Validator::make($data, [
             'usertype' => ['required', 'string', 'max:255'],
             'username' => ['required', 'string', 'max:255', 'unique:users'],
@@ -73,6 +74,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // save and create the user
         return User::create([
             'username' => $data['username'],
             'firstname' => $data['firstname'],

@@ -17,6 +17,8 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Livestream</h5>
+
+            <!-- display the list of livestream for that class -->
             <div class="table-responsive">
               <table class="table table-striped datatable" id="tableall">
                 <thead>
@@ -30,6 +32,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- check if livestream exist -->
                   @if($livestreams->isEmpty())
                     <td colspan="6" class="text-center align-middle">No livestream</td>
                   @else

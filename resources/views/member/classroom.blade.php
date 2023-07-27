@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
+    <!-- display error message -->
     <div class="alert alert-danger">
       Failed to create new class:
         <ul>
@@ -30,10 +30,13 @@
           <div class="card-body">
             <h5 class="card-title">Classroom</h5>
             <div class="position-absolute top-0 end-0 p-3">
+              <!-- create class button -->
             <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
                <i class="bi bi-plus-circle"></i><span>&nbspCreate Class</span>
             </button>
             </div>
+
+            <!-- display existing classes -->
             <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
               <thead>
@@ -60,6 +63,7 @@
                   @endif
                   <td>{{ $classroom->created_at->format('d F Y, H:i A') }}</td>
                   <td>
+                    <!-- for updating the registration status of the class (open/close registration) -->
                     <form action="{{ route('updateRegistration')}}" method="POST" id="updateRegistration">
                       @csrf
                       <div class="form-check form-switch">
@@ -73,12 +77,12 @@
                         <input type="hidden" name="classID" id="classID" value="">
                     </form>
                   </td>
+                  <!-- for archive/unarchive the class -->
                   @if ($classroom->isAvailable == 1)
                     <td><button  type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#classavailable" onclick="passID('{{ $classroom->id }}')">Active</button></td>
                   @else
                     <td><button  type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#classavailable" onclick="passID('{{ $classroom->id }}')">Inactive</button></td> 
                   @endif
-                  
                 </tr>
                 @endforeach
               </tbody>
@@ -113,7 +117,6 @@
                       <button type="button" class="btn btn-primary" onclick="generateCode()"><i class="bi bi-arrow-counterclockwise"></i></button>
                     </div>
                   </div>
-                
               </div>
 
               <div class="modal-footer">
@@ -123,7 +126,7 @@
             </form>
           </div>
         </div>
-    </div><!-- End Vertically centered Modal-->
+    </div><!-- End add class Modal-->
 
      <!-- modal change class availability -->
      <div class="modal fade" id="classavailable" tabindex="-1">
@@ -154,7 +157,7 @@
           </form>
         </div>
       </div>
-    </div><!-- End Vertically centered Modal-->
+    </div><!-- End change class availability Modal-->
   </section>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -178,9 +181,11 @@
             "id": 1
           }),
           success: function(response) {
+            //put the response into the form field
             $("#classcode").val(response.result.random.data[0]);
           },
           error: function(error) {
+            //display error message
             console.log(xhr.responseText);
           }
         });
@@ -191,6 +196,7 @@
           $('#classroom_id').val(id);
         }
 
+        //auto submitting the form after user click switch button
         function checkFormSwitch(classID, value){
           $('#isFull').val(value);
           $('#classID').val(classID);

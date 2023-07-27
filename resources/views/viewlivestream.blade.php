@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
   <h1>Livestream</h1>
@@ -21,6 +20,7 @@
       <div class="col-lg-8">
         <div class="card">
           <div class="card-body">
+            <!-- display the livestream -->
             <h5 class="card-title">{{ $livestream->streamName }}</h5>
             <p>{{ $livestream->streamDesc }}</p>
             <div style="display: flex; justify-content: center;">
@@ -32,6 +32,8 @@
           </div>
         </div>
       </div>
+
+      <!-- display the live ranking -->
       <div class="col-lg-4">
         <div class="card">
           <div class="card-body">
@@ -44,6 +46,7 @@
                 <th>Total Marks</th>
               </thead>
               <tbody>
+                <!-- check if the report exist -->
                 @if(!$reports->isEmpty())
                 @foreach($reports as $index=>$report)
                 <tr>
@@ -98,6 +101,4 @@
     updateReportsTable(classroomId);
   }, 5000); // Refresh every 5 seconds (adjust the time interval as needed)
 </script>
-
-
 @endsection

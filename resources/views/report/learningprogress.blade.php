@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
     <h1>Participant Progress</h1>
@@ -18,6 +17,7 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{$class->className}}</h5>
+            <!-- display all users in the class -->
             <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
               <thead>
@@ -34,6 +34,7 @@
                 <tr>
                   <td>{{$index+1}}</td>
                   <td><a href="{{ route('viewParticipantModule', ['id' => $participant->id]) }}">{{$participant->username}}</a></td>
+                  <!-- loop for percentage of each module for that participant -->
                   @foreach($participant->arrPercentage as $arr)
                     <td>{{$arr['percentage']}}%</td>
                   @endforeach
@@ -47,5 +48,4 @@
       </div>
     </div>
   </section>
-  
 @endsection

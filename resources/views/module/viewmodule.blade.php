@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 @if ($errors->any())
+  <!-- display error message -->
     <div class="alert alert-danger">
       Failed to add add new module:
         <ul>
@@ -19,7 +19,6 @@
   cursor: pointer;
 }
 </style>
-
 
 <div class="pagetitle">
     <h1>{{ $module->moduleName }}</h1>
@@ -49,6 +48,7 @@
                 <h5 class="card-title">Module Content</h5>
               </div>
               <div class="col-lg-6 d-flex align-items-center justify-content-end">
+                <!-- if not participant, display the add section button -->
                 @if(Auth::user()->usertype != '1')
                     <button  type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSectionModal">
                         <i class="bi bi-plus-circle"></i><span>&nbspAdd Section</span>
@@ -57,8 +57,8 @@
               </div>
             </div>
 
-            {{-- contenthere --}}
             <div class="row">
+              <!-- check if the contents is empty -->
               @if($sections->isEmpty())
               <div class="card shadow lg p-3 mb-5 bg-white rounded border border-dark">
                 <div class="card-body">
@@ -73,6 +73,7 @@
                 </div>
               </div>
               @else
+              <!-- display each sections -->
               @foreach($sections as $index=>$section)
               <div class="card shadow lg p-3 mb-5 bg-white rounded border border-dark">
                 <div class="card-body">
@@ -85,6 +86,7 @@
                     </div>
                     
                     <div class="dropdown ms-auto">
+                      <!-- if not participant, display button to add/edit/delete the section -->
                       @if(Auth::user()->usertype != '1')
                       <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
                       <ul class="dropdown-menu">
@@ -110,28 +112,10 @@
                       </ul>
                       @endif
                     </div>
-                    {{-- <div class="col-lg-6 d-flex align-items-center justify-content-end">
-                      <div class="row">
-                        @if(Auth::user()->usertype != '1')
-                        <div class="col-md-6 mb-2 d-flex justify-content-end">
-                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContentModal" onclick="getSectionID('{{ $section->id }}')"><i class="bi bi-plus-circle"></i><span>&nbspAdd Content</span></button>
-                        </div>
-                        <div class="col-md-3 mb-2 d-flex justify-content-between">
-                          <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#editSectionModal" onclick="getSection('{{ $section->id }}')">Edit</button>
-                        </div>
-                        <div class="col-md-3 mb-2 d-flex justify-content-start">
-                          <form action="{{ route('deleteSection') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete section: {{ $section->secTitle }} and all its contents?');">
-                            @csrf
-                            <input type="hidden" name="sectionid" id="sectionid" value="{{ $section->id }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                          </form>
-                        </div>
-                        @endif
-                      </div>
-                    </div> --}}
                   </div>
 
                   @php $indexDoc = 0; @endphp
+                  <!-- display all the documents in that section -->
                   @foreach($documents as $document)
                     @if($document->sectionID == $section->id)
                     <div class="card shadow p-3 mb-5 bg-white rounded border border-dark">
@@ -144,6 +128,7 @@
                               <i class="bi bi-eye-slash"></i>
                             @endif
                           </div>
+                          <!-- if not participant, display button to edit or delete the content -->
                           @if(Auth::user()->usertype != '1')
                           <div class="dropdown ms-auto">
                             <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -174,9 +159,11 @@
                           @if (empty($files))
                               <p>No files available.</p>
                           @else
+                          <!-- loop all files in that document -->
                             @foreach($files as $file)
                               @if($file->documentID == $document->id)
                               <div class="p-3 mb-2 border border-dark bg-light rounded">
+                                <!-- display for text type of file -->
                                 @if($file->fileType == 'text')
                                 <div class="row">
                                   <div class="d-flex justify-content-between align-items-center">
@@ -187,6 +174,7 @@
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                     </div>
+                                    <!-- mark as done button for participant -->
                                     @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -204,6 +192,7 @@
                                       @endif
                                     </div>
                                     @else
+                                    <!-- update/delete button for the member/admin -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -232,9 +221,11 @@
                                     @endif
                                   </div>
                                   <div>
+                                    <!-- display the text content -->
                                     {!! $file->fileContent !!}
                                   </div> 
                                 </div>
+                                <!-- for the image file type -->
                                 @elseif($file->fileType == 'image')
                                   <div class="row">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -247,6 +238,7 @@
                                       </div>
                                       @if(Auth::user()->usertype == '1')
                                       <div>
+                                        <!-- marks as done button for participant -->
                                         @if($file->status == '0')
                                         <form id="markAsDoneForm" action="{{ route('markAsDone') }}" method="POST">
                                           @csrf
@@ -262,6 +254,7 @@
                                         @endif
                                       </div>
                                       @else
+                                      <!-- update/delete button for admin/member -->
                                       <div>
                                         <div class="dropdown ms-auto">
                                           <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -289,19 +282,23 @@
                                       </div>
                                       @endif
                                     </div>
+                                    <!-- display the image -->
                                     <div class="d-flex justify-content-center align-items-center mt-2" style="height: 100%;">
                                       <img src="{{ asset('assets/img/filepics/' . $file->fileContent) }}" alt="Gambar" style="max-width: 50%; height: auto;" class="text-middle">
                                     </div> 
                                   </div>
+                                  <!-- for pdf file type -->
                                 @elseif($file->fileType == 'pdf')
                                   <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                       <i class="bi bi-file-earmark-pdf"></i>
+                                      <!-- display the pdf file name and open in newtab when clicked -->
                                       <a href="{{ route('viewFilePDF', ['id' => $file->id]) }}" target="_blank">{{ $file->fileName }}</a>
                                       @if(Auth::user()->usertype != '1' && $file->ishidden == true)
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                     </div>
+                                    <!-- mark as done button for participant -->
                                     @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -319,6 +316,7 @@
                                         @endif
                                     </div>
                                     @else
+                                    <!-- update/delete button for member/admin -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -346,15 +344,18 @@
                                     </div>
                                     @endif
                                   </div>
+                                  <!-- display for zip file type -->
                                 @elseif($file->fileType == 'zip')
                                   <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                       <i class="bi bi-file-earmark-zip"></i>
+                                      <!-- display the file and automatically download in new tab when clicked -->
                                       <a href="{{ route('viewFileZip', ['id' => $file->id]) }}" target="_blank">{{ $file->fileName }}</a>
                                       @if(Auth::user()->usertype != '1' && $file->ishidden == true)
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                     </div>
+                                    <!-- mark as done button for participant -->
                                     @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -372,6 +373,7 @@
                                       @endif
                                     </div>
                                     @else
+                                    <!-- update/delete button for member/admin -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -399,15 +401,18 @@
                                     </div>
                                     @endif
                                   </div>
+                                  <!-- display for document file type -->
                                 @elseif($file->fileType == 'docx')
                                   <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                       <i class="bi bi-file-earmark-word"></i>
+                                      <!-- display the file name and automatically download in new tab when clicked -->
                                       <a href="{{ route('viewFileWord', ['id' => $file->id]) }}" target="_blank">{{ $file->fileName }}</a>
                                       @if(Auth::user()->usertype != '1' && $file->ishidden == true)
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                     </div>
+                                    <!-- mark as done button for participant -->
                                     @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -425,6 +430,7 @@
                                       @endif
                                     </div>
                                     @else
+                                    <!-- update/delete button for member/admin -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -452,15 +458,18 @@
                                     </div>
                                     @endif
                                   </div>
+                                  <!-- display for url file type -->
                                 @elseif($file->fileType == 'url')
                                   <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                       <i class="bi bi-globe"></i>
+                                      <!-- display the file name -->
                                       <a href="{{ route('viewFile', ['id' => $file->id]) }}">{{ $file->fileName }}</a>
                                       @if(Auth::user()->usertype != '1' && $file->ishidden == true)
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                     </div>
+                                    <!-- mark as done button for participant -->
                                     @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -478,6 +487,7 @@
                                       @endif
                                     </div>
                                     @else
+                                    <!-- update/delete button for member/admin -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -505,15 +515,18 @@
                                     </div>
                                     @endif
                                   </div>
+                                  <!-- display for youtube video url file type -->
                                 @elseif($file->fileType == 'yturl')
                                 <div class="d-flex justify-content-between align-items-center">
                                   <div>
                                     <i class="bi bi-file-earmark-easel"></i>
+                                    <!-- display the file name -->
                                     <a href="{{ route('viewFile', ['id' => $file->id]) }}">{{ $file->fileName }}</a>
                                     @if(Auth::user()->usertype != '1' && $file->ishidden == true)
                                         <i class="bi bi-eye-slash"></i>
                                       @endif
                                   </div>
+                                  <!-- mark as done button for participant -->
                                   @if(Auth::user()->usertype == '1')
                                     <div>
                                       @if($file->status == '0')
@@ -531,6 +544,7 @@
                                       @endif
                                     </div>
                                     @else
+                                    <!-- edit/delete button for admin/member -->
                                     <div>
                                       <div class="dropdown ms-auto">
                                         <i class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></i>
@@ -563,7 +577,7 @@
                               @endif
                             @endforeach
                           @endif
-                          
+                          <!-- add file button for member/admin -->
                           @if(Auth::user()->usertype != '1')
                           <div class="card-footer bg-light border border-dark custom-cursor rounded" data-bs-toggle="modal" data-bs-target="#addFileModal" onclick="getDocumentID('{{ $document->id }}')">
                             <i class="bi bi-plus-circle"></i><span>&nbspAdd File</span>
@@ -578,7 +592,6 @@
               @endforeach
               @endif
             </div>
-
           </div>
         </div>
       </div>
@@ -600,7 +613,6 @@
                   <label for="sectionname">Section Title:</label>
                   <input type="text" class="form-control" id="sectionname" name="sectionname" value="{{ old('sectionname') }}">
                 </div>
-
                 <input type="hidden" id="moduleid" name="moduleid" value="{{$module->id}}">
             </div>
 
@@ -682,7 +694,7 @@
         </div>
     </div><!-- End add content Modal-->
 
-    <!-- modal add file/submission -->
+    <!-- modal add file -->
     <div class="modal fade" id="addFileModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
@@ -766,6 +778,7 @@
   <!-- Include the Quill library -->
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
+      //to get the placeholder for editing section form
       function getSection(id) {
         $.ajax({
           url: '/module/section/edit/' + id,
@@ -802,6 +815,7 @@
 
   <!-- Initialize Quill editor -->
   <script>
+    //for the text area using quill editor
     $(document).ready(function(){
       var quill = new Quill('#contentdesc', {
       theme: 'snow'
@@ -911,6 +925,7 @@
 </script>
 
 <script>
+  //automatically submit the form for mark as done button
   function submitForm() {
       // Submit the form
       document.getElementById('markAsDoneForm').submit();

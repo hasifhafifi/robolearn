@@ -1,7 +1,7 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="pagetitle">
+  <!-- display error message -->
     <h1>Manage Participant</h1>
     <nav>
       <ol class="breadcrumb">
@@ -25,9 +25,10 @@
                   <form action="">
                       <div class="row">
                           <div class="col-md-6">
-                            <!-- Add any additional form elements or buttons here -->
+                            
                           </div>
                           <div class="col-md-6 mt-2">
+                            <!-- classroom dropdown menu -->
                               <select name="classDropdown" id="classDropdown" class="form-select">
                                   @if($classrooms->isEmpty())
                                   <option value="">None</option>
@@ -43,7 +44,8 @@
               </div>
           </div>
             
-             <div class="table-responsive">
+            <!-- display the list of participants based on the classroom chosen -->
+            <div class="table-responsive">
             <table class="table table-striped datatable" id="tableall">
                 <thead>
                   <tr>
@@ -57,6 +59,7 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- check if participants of that class exist -->
                   @if(!isset($classView))
                   <tr>
                     <td colspan="100" class="text-center">No Data</td>
@@ -69,12 +72,14 @@
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phonenum }}</td>
+                    <!-- check if participant is in group -->
                     @if (!isset($user->group))
                       <td>Not in a group</td>
                     @else
                       <td><a href="{{ route('viewgroupdetail', ['id' => $user->group->id]) }}">{{ $user->group->name }}</a></td>
                     @endif
                     <td>
+                      <!-- form to remove the participant from the classroom -->
                       <form action="{{ route('removeparticipant') }}" method="POST" id="removeForm" onsubmit="return confirm('Are you sure you want to remove this participant?');">
                         @csrf
                         <input type="hidden" name="userID" id="userID" value="{{ $user->id }}">
@@ -95,6 +100,7 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
+    //dynamically update the classroom list based on chosen classroom from the dropdown menu
     $(document).ready(function () {
         $('#classDropdown').on('change', function () {
             var classID = $(this).val();
@@ -106,7 +112,6 @@
                     classid: classID
                 },
                 success: function (data) {
-                    // console.log(data);
                     // handle success response
                     var tableBody = $('#tableall tbody');
 
@@ -147,7 +152,7 @@
                     });
                 },
                 error: function (xhr, status, error) {
-                    // handle error response
+                    console.log(error);
                 }
             });
         });

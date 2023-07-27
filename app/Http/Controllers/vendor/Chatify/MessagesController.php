@@ -337,6 +337,7 @@ class MessagesController extends Controller
         if($user->usertype == 1){
             $classcode = $user->participants->participant_classcode;
 
+            //get all the participants from the same class only
             $sameclass = User::join('participants', 'users.id', '=', 'participants.user_id')
             ->where('participants.participant_classcode', $classcode)
             ->where('users.id', '!=', Auth::user()->id)
@@ -349,11 +350,6 @@ class MessagesController extends Controller
                     ->get();
 
             $records = $sameclass->concat($nonparticipant)->paginate(10);
-
-            // $records = User::where('id','!=',Auth::user()->id)
-            //         ->where('username', 'LIKE', "%{$input}%")
-            //         ->paginate($request->per_page ?? $this->perPage);
-
         }else{
             $records = User::where('id','!=',Auth::user()->id)
                     ->where('username', 'LIKE', "%{$input}%")
